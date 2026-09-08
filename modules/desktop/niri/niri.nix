@@ -113,9 +113,9 @@
 
       xdg.terminal-exec = {
         enable = true;
-        settings.niri = ["Alacritty.desktop"];
+        settings.niri = ["foot.desktop"];
       };
-      programs.alacritty.enable = true;
+      programs.foot.enable = true;
 
       programs.fuzzel.enable = true;
 

@@ -1,5 +1,10 @@
-{lib, ...}: {
-  flake.modules.homeManager.base = {config, ...}: {
+{
+  flake.modules.homeManager.base = {
+    config,
+    pkgs,
+    lib,
+    ...
+  }: {
     config = lib.mkIf config.programs.foot.enable {
       xdg.desktopEntries.foot = {
         name = "Foot";
@@ -25,12 +30,10 @@
       };
 
       programs.foot.settings = {
-        main = {
-          term = "foot-direct";
-          dpi-aware = "no";
-        };
         key-bindings = {
-          pipe-command-output = ''[sh -c 'foot -- nvim /proc/$$/fd/0'] Control+Shift+g'';
+          show-urls-launch = "Control+Shift+o";
+          show-urls-copy = "Control+Shift+i";
+          pipe-command-output = "[${lib.getExe' pkgs.wl-clipboard "wl-copy"}] Control+Shift+g";
         };
       };
 
@@ -81,7 +84,11 @@
     };
   };
 
-  flake.modules.homeManager.theme = {config, ...}: let
+  flake.modules.homeManager.theme = {
+    config,
+    lib,
+    ...
+  }: let
     inherit (config.theme) colors font opacity;
   in {
     config = lib.mkIf config.programs.foot.enable {
@@ -100,16 +107,12 @@
               value = colors."color${toString i}".hex_stripped;
             })
             8
-          )
-          // builtins.listToAttrs (
-            builtins.genList (i: {
+            ++ builtins.genList (i: {
               name = "bright${toString i}";
               value = colors."color${toString (i + 8)}".hex_stripped;
             })
             8
-          )
-          // builtins.listToAttrs (
-            builtins.genList (i: {
+            ++ builtins.genList (i: {
               name = toString i;
               value = colors."color${toString i}".hex_stripped;
             })
