@@ -112,13 +112,5 @@
         type = "app";
         program = "${binPath}/${name}";
       });
-    legacyPackages.vscode-typescript-next = pkgs.open-vsx.nsttt.native-preview.overrideAttrs (oldAttrs: {
-      nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [pkgs.yq-go];
-      postPatch =
-        (oldAttrs.postPatch or "")
-        + ''
-          yq -i '.engines.vscode = "^1.110.0"' package.json
-        '';
-    });
   };
 }
