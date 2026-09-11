@@ -149,7 +149,7 @@
 
     hm.programs.fastfetch.enable = true;
 
-    hm.programs.neovim.enable = true;
+    hm.programs.nixvim.enable = true;
 
     hm.programs.gomi.enable = true;
 

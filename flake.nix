@@ -60,6 +60,7 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixvim.url = "github:nix-community/nixvim";
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";

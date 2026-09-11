@@ -59,6 +59,10 @@
       nixpkgs = config.nixpkgs;
     };
 
+    flake.modules.nixvim.base = {
+      nixpkgs = config.nixpkgs;
+    };
+
     perSystem = {system, ...}: {
       _module.args.final = import inputs.nixpkgs (config.nixpkgs // {inherit system;});
     };
