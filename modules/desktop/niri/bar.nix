@@ -122,7 +122,7 @@
           good_bg = surface.hex;
           good_fg = green.hex;
           warning_bg = surface.hex;
-          warning_fg = yellow.hex;
+          warning_fg = orange.hex;
           critical_bg = surface.hex;
           critical_fg = error.hex;
           separator = "";

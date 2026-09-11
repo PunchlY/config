@@ -591,11 +591,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1788879431,
-        "narHash": "sha256-Dk2I3xlzZBHX/MZGqWzzPTCuQArqasFv47fbe1jH8TI=",
+        "lastModified": 1789108602,
+        "narHash": "sha256-HuYaFXR4iT3rikcpQIDqIRfIDTvQ6/A1ZW+VmsMfAQM=",
         "owner": "PunchlY",
         "repo": "oktheme",
-        "rev": "84f4fd3820e3b5bdd6626e461623993aa2fa8ba3",
+        "rev": "e6188953429d665c9a0320551c3bfc557083ecaa",
         "type": "github"
       },
       "original": {
