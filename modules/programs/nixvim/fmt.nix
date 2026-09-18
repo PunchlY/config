@@ -1,9 +1,5 @@
 {
-  flake.modules.nixvim.base = {
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.modules.nixvim.base = {...}: {
     plugins.conform-nvim = {
       enable = true;
       autoInstall.enable = true;

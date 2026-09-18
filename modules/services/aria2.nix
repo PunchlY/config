@@ -4,31 +4,21 @@
     pkgs,
     lib,
     ...
-  }: {
-    user.extraGroups = ["aria2"];
-
-    services.aria2 = lib.mkIf config.services.aria2.enable {
-      openPorts = lib.mkDefault false;
-      rpcSecretFile = lib.mkDefault (pkgs.writeText "secret" "aria2rpc");
-    };
-  };
-
-  flake.modules.homeManager.nixos = {
-    osConfig,
-    config,
-    lib,
-    ...
   }: let
-    escapeTmpfiles = lib.strings.escapeC [
-      "\t"
-      "\n"
-      "\r"
-      " "
-      "\\"
-    ];
+    cfg = config.services.aria2;
+    escapeTmpfiles = lib.strings.escapeC ["\t" "\n" "\r" " " "\\"];
   in {
-    systemd.user.tmpfiles.rules = lib.mkIf osConfig.services.aria2.enable [
-      "L ${escapeTmpfiles "${config.xdg.userDirs.download}/aria2"} - - - - ${escapeTmpfiles osConfig.services.aria2.settings.dir}"
-    ];
+    config = lib.mkIf cfg.enable {
+      user.extraGroups = ["aria2"];
+
+      services.aria2 = {
+        openPorts = lib.mkDefault false;
+        rpcSecretFile = lib.mkDefault (pkgs.writeText "secret" "aria2rpc");
+      };
+
+      hm.systemd.user.tmpfiles.rules = [
+        "L ${escapeTmpfiles "${config.hm.xdg.userDirs.download}/aria2"} - - - - ${escapeTmpfiles cfg.settings.dir}"
+      ];
+    };
   };
 }

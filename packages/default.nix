@@ -25,11 +25,13 @@
     overlayAttrs = {
       balatro = final.callPackage ./balatro/package.nix {};
 
+      browndust2 = final.callPackage ./browndust2.nix {};
+
       bun-latest =
-        builtins.attrNames inputs'.bun.packages
-        |> lib.sort (a: b: builtins.compareVersions a b < 0)
+        lib.attrNames inputs'.bun.packages
+        |> lib.sort (a: b: lib.compareVersions a b < 0)
         |> lib.last
-        |> lib.flip builtins.getAttr inputs'.bun.packages;
+        |> lib.flip lib.getAttr inputs'.bun.packages;
       # bun-latest = lib.pipe inputs'.bun.packages [
       #   lib.attrNames
       #   (lib.sort (a: b: lib.compareVersions a b < 0))
@@ -68,8 +70,6 @@
 
       cronstrue = final.callPackage ./cronstrue.nix {};
 
-      db2 = final.callPackage ./db2.nix {};
-
       fuzzel-polkit-agent = final.callPackage ./fuzzel-polkit-agent/package.nix {};
 
       gtk-nocsd = final.callPackage ./gtk-nocsd.nix {};
@@ -96,10 +96,11 @@
     apps = let
       binPath = "${lib.getBin final.custom-scripts}/bin";
     in
-      builtins.readDir binPath
+      lib.readDir binPath
       |> lib.mapAttrs (name: _: {
         type = "app";
         program = "${binPath}/${name}";
+        meta.description = name;
       });
   };
 }

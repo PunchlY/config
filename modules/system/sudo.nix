@@ -1,5 +1,9 @@
 {
-  flake.modules.nixos.base = {config, ...}: {
+  flake.modules.nixos.base = {
+    config,
+    lib,
+    ...
+  }: {
     security.sudo.execWheelOnly = true;
     security.sudo.extraConfig = ''
       Defaults lecture = never
@@ -9,7 +13,7 @@
       validUsers = users: users == [] || users == ["root"];
       validGroups = groups: groups == [] || groups == ["wheel"];
       validUserGroups =
-        builtins.all (
+        lib.all (
           r: validUsers (r.users or []) && validGroups (r.groups or [])
         )
         config.security.sudo.extraRules;

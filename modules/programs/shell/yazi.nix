@@ -4,31 +4,57 @@
     pkgs,
     lib,
     ...
-  }: {
-    config = lib.mkIf config.programs.yazi.enable {
-      xdg.mimeApps.defaultApplicationPackages = [
-        config.programs.yazi.package
-      ];
-
+  }: let
+    cfg = config.programs.yazi;
+  in {
+    config = lib.mkIf cfg.enable {
+      xdg.mimeApps.defaultApplicationPackages = [cfg.package];
       programs.yazi = {
+        shellWrapperName = "y";
         extraPackages = with pkgs; [
           hexyl
         ];
-        enableBashIntegration = true;
-        shellWrapperName = "y";
+        plugins = {
+          inherit
+            (pkgs.yaziPlugins)
+            chmod
+            git
+            mount
+            piper
+            sudo
+            toggle-pane
+            ;
+        };
+        settings.plugin.prepend_fetchers = [
+          {
+            url = "*";
+            run = "git";
+            group = "git";
+          }
+          {
+            url = "*/";
+            run = "git";
+            group = "git";
+          }
+        ];
+        settings.plugin.append_previewers = [
+          {
+            url = "*";
+            run = ''piper -- hexyl --border=none --terminal-width=$w "$1"'';
+          }
+        ];
         theme = {
           icon.prepend_globs = lib.mapAttrsToList (url: text: {inherit url text;}) {
             "${config.xdg.userDirs.documents}/" = "";
             "${config.xdg.userDirs.download}/" = "";
-            "${config.xdg.userDirs.extraConfig.MEDIA}/" = "";
             "${config.xdg.userDirs.music}/" = "";
             "${config.xdg.userDirs.pictures}/" = "";
             "${config.xdg.userDirs.videos}/" = "";
+            "${config.xdg.userDirs.projects}/" = "";
+            "${config.xdg.userDirs.extraConfig.MEDIA}/" = "";
             "${config.xdg.userDirs.extraConfig.GAME}/" = "";
-            "${config.xdg.userDirs.extraConfig.PROJECTS}/" = "";
           };
           icon.prepend_dirs = lib.mapAttrsToList (name: text: {inherit name text;}) {
-            nixos-config = "";
             ".minecraft" = "󰍳";
             "minecraft" = "󰍳";
           };
@@ -79,35 +105,6 @@
 
           require("toggle-pane"):entry("min-parent")
         '';
-        plugins = {
-          inherit
-            (pkgs.yaziPlugins)
-            chmod
-            git
-            mount
-            piper
-            sudo
-            toggle-pane
-            ;
-        };
-        settings.plugin.prepend_fetchers = [
-          {
-            url = "*";
-            run = "git";
-            group = "git";
-          }
-          {
-            url = "*/";
-            run = "git";
-            group = "git";
-          }
-        ];
-        settings.plugin.append_previewers = [
-          {
-            url = "*";
-            run = ''piper -- hexyl --border=none --terminal-width=$w "$1"'';
-          }
-        ];
       };
     };
   };

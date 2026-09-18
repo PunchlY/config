@@ -13,7 +13,7 @@ write-flake:
     nix run ".#write-flake" --offline --no-write-lock-file --no-net
 
 repl $hostname=`hostname`:
-    nix repl ".#nixosConfigurations.$hostname"
+    nh os repl . --hostname="$hostname"
 
 clean:
     sudo nix profile wipe-history --profile /nix/var/nix/profiles/system

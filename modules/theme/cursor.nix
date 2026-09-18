@@ -1,5 +1,5 @@
-{...}: let
-  shared = {
+{
+  flake.modules.generic.theme = {
     pkgs,
     lib,
     ...
@@ -21,20 +21,12 @@
       };
     };
   };
-in {
-  flake.modules.nixos.theme = {config, ...}: let
-    cfg = config.theme;
-  in {
-    imports = [shared];
 
-    config = {
-      environment.variables.XCURSOR_SIZE = toString cfg.cursor.size;
-    };
+  flake.modules.nixos.theme = {config, ...}: {
+    environment.variables.XCURSOR_SIZE = toString config.theme.cursor.size;
   };
 
   flake.modules.homeManager.theme = {config, ...}: {
-    imports = [shared];
-
     home.pointerCursor = {
       enable = true;
       inherit (config.theme.cursor) name package size;

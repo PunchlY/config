@@ -1,6 +1,16 @@
-{withSystem, ...}: let
-  mkColors = pkgs: wallpaper:
-    withSystem pkgs.stdenv.hostPlatform.system ({inputs', ...}:
+{moduleWithSystem, ...}: {
+  flake-file.inputs = {
+    oktheme.url = "github:PunchlY/oktheme";
+  };
+
+  flake.modules.generic.theme = moduleWithSystem ({inputs'}: {
+    config,
+    pkgs,
+    lib,
+    ...
+  }: let
+    cfg = config.theme;
+    mkColors = wallpaper:
       pkgs.runCommandLocal "generated-theme" {
         inherit wallpaper;
         nativeBuildInputs = [
@@ -28,26 +38,16 @@
         fi
         oktheme "oklch($l $c $h)" >$out
       ''
-      |> pkgs.lib.importJSON
-      |> builtins.mapAttrs (
-        _name: value:
-          value
-          // {
-            hex_stripped = builtins.substring 1 6 value.hex;
-          }
-      ));
-
-  shared = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: let
-    cfg = config.theme;
+      |> lib.importJSON
+      |> lib.mapAttrs (_: value:
+        value
+        // {
+          hex_stripped = lib.substring 1 6 value.hex;
+        });
   in {
     options.theme = {
       wallpaper = lib.mkOption {
-        type = lib.types.path;
+        type = lib.types.either lib.types.path lib.types.package;
         default = pkgs.nixos-artwork.wallpapers.nineish-catppuccin-mocha.src;
       };
 
@@ -59,19 +59,7 @@
       };
     };
     config = {
-      theme.colors = mkColors pkgs cfg.wallpaper;
+      theme.colors = mkColors cfg.wallpaper;
     };
-  };
-in {
-  flake-file.inputs = {
-    oktheme.url = "github:PunchlY/oktheme";
-  };
-
-  flake.modules.nixos.theme = {
-    imports = [shared];
-  };
-
-  flake.modules.homeManager.theme = {
-    imports = [shared];
-  };
+  });
 }

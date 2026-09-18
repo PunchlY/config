@@ -1,45 +1,38 @@
 {
+  flake.modules.nixos.base = {
+    config,
+    lib,
+    ...
+  }: {
+    config = lib.mkIf config.programs.uwsm.enable {
+      hm.programs.uwsm.enable = true;
+    };
+  };
+
   flake.modules.homeManager.base = {
     config,
     lib,
     ...
   }: let
     cfg = config.programs.uwsm;
-
     variablesType = with lib.types;
-      attrsOf (
-        nullOr (oneOf [
-          (listOf (oneOf [
-            int
-            str
-            path
-          ]))
-          int
+      lazyAttrsOf (nullOr (oneOf [
+        (listOf (oneOf [
           str
           path
-        ])
-      );
-    variablesApply = let
-      toStr = v:
-        if lib.isPath v
-        then "${v}"
-        else toString v;
-    in
-      attrs:
-        lib.mapAttrs (_n: v:
-          if lib.isList v
-          then lib.concatMapStringsSep ":" toStr v
-          else toStr v) (
-          lib.filterAttrs (_n: v: v != null) attrs
-        );
-
-    generator = attrs:
-      lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (
-          key: value: "export ${lib.escapeShellArg key}=${lib.escapeShellArg value}"
-        )
-        attrs
-      );
+          int
+          float
+          bool
+        ]))
+        str
+        path
+        int
+        float
+        bool
+      ]));
+    variablesApply = attrs:
+      lib.filterAttrs (_: v: v != null) attrs
+      |> lib.mapAttrs (_: v: lib.toList v |> lib.concatMapStringsSep ":" toString);
   in {
     options.programs.uwsm = {
       enable = lib.mkEnableOption "uwsm";
@@ -50,22 +43,24 @@
       };
       desktopEnv = lib.mkOption {
         type = lib.types.attrsOf variablesType;
-        apply = lib.mapAttrs (_desktop: variablesApply);
+        apply = lib.mapAttrs (_: variablesApply);
         default = {};
       };
     };
 
-    config = lib.mkIf cfg.enable {
-      xdg.configFile =
-        lib.mapAttrs'
-        (desktop: attrs:
-          lib.nameValuePair "uwsm/env-${desktop}" {text = generator attrs;})
-        cfg.desktopEnv
-        // {"uwsm/env" = {text = generator cfg.env;};};
-    };
-  };
-
-  flake.modules.homeManager.nixos = {osConfig, ...}: {
-    programs.uwsm.enable = osConfig.programs.uwsm.enable;
+    config = lib.mkIf cfg.enable (lib.mkMerge [
+      {
+        xdg.configFile."uwsm/env" = {
+          text = config.lib.shell.exportAll cfg.env;
+        };
+      }
+      {
+        xdg.configFile = lib.mapAttrs' (desktop: attrs:
+          lib.nameValuePair "uwsm/env-${desktop}" {
+            text = config.lib.shell.exportAll attrs;
+          })
+        cfg.desktopEnv;
+      }
+    ]);
   };
 }

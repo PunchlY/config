@@ -1,5 +1,9 @@
-{lib, ...}: {
-  flake.modules.nixos.base = {config, ...}: {
+{
+  flake.modules.nixos.base = {
+    config,
+    lib,
+    ...
+  }: {
     config = lib.mkIf config.boot.plymouth.enable {
       boot.kernelParams = [
         "quiet"
@@ -14,7 +18,11 @@
     };
   };
 
-  flake.modules.nixos.theme = {config, ...}: let
+  flake.modules.nixos.theme = {
+    config,
+    lib,
+    ...
+  }: let
     inherit (config.theme) font;
   in {
     config = lib.mkIf config.boot.plymouth.enable {

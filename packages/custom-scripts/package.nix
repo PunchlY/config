@@ -7,10 +7,10 @@
   lib,
 }: let
   getVars = lib.flip lib.pipe [
-    builtins.readFile
-    (builtins.split "@([a-zA-Z_][0-9A-Za-z_'-]*)@")
-    (builtins.filter builtins.isList)
-    (map builtins.head)
+    lib.readFile
+    (lib.split "@([a-zA-Z_][0-9A-Za-z_'-]*)@")
+    (lib.filter lib.isList)
+    (map lib.head)
     lib.unique
   ];
   mkScript = script: let

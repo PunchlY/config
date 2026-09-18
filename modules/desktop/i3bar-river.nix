@@ -6,7 +6,6 @@
   }: {
     config = lib.mkIf config.programs.i3bar-river.enable {
       programs.i3status-rust.enable = true;
-
       programs.i3bar-river.settings = {
         command = ''i3status-rs "config-''${XDG_CURRENT_DESKTOP:-default}"'';
       };

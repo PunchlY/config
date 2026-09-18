@@ -15,6 +15,20 @@
       } "magick $src -fuzz 10% -trim +repage $out";
   };
 
+  configurations.nixos.nano.gaming = {
+    enable = true;
+    games = {
+      minecraft-je.enable = true;
+      balatro.enable = true;
+      browndust2.enable = true;
+      celeste64.enable = true;
+      helltaker.enable = true;
+      katawa-shoujo-re-engineered.enable = true;
+      pvz-rh.enable = true;
+      shattered-pixel-dungeon.enable = true;
+    };
+  };
+
   configurations.nixos.nano.module = {pkgs, ...}: {
     boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-x86_64-v3;
 
@@ -173,7 +187,7 @@
 
     hm.programs.eza.enable = true;
 
-    hm.programs.nix-index-database.enable = true;
+    programs.nix-index-database.comma.enable = true;
 
     hm.programs.bash.enable = true;
 
@@ -248,25 +262,5 @@
 
       (libinput.override {eventGUISupport = true;})
     ];
-
-    hm.programs.prismlauncher.enable = true;
-
-    hm.programs.katawa-shoujo-re-engineered.enable = true;
-
-    hm.programs.celeste64.enable = true;
-
-    hm.programs.shattered-pixel-dungeon.enable = true;
-
-    hm.programs.steam.config = {
-      nonSteamApps."Brown Dust 2".enable = true;
-
-      nonSteamApps.Waydroid.enable = true;
-
-      nonSteamApps."Plants vs. Zombies: RH".enable = true;
-
-      apps.Balatro.enable = true;
-
-      apps.Helltaker.enable = true;
-    };
   };
 }

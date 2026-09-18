@@ -6,28 +6,32 @@
     ];
   };
 
-  flake.modules.homeManager.base = {
+  flake.modules.homeManager.gaming = {
     config,
     pkgs,
     lib,
     ...
-  }: {
-    config = lib.mkIf config.programs.steam.config.enable {
-      programs.steam.config = {
-        apps.Balatro = {
-          enable = lib.mkDefault false;
-          id = 2379780;
-          preHook = ''
-            Mods="$XDG_DATA_HOME/Balatro/Mods"
-            export XDG_DATA_HOME="$STEAM_COMPAT_DATA_PATH/pfx/drive_c/users/steamuser/AppData/Roaming"
-            mkdir -p "$XDG_DATA_HOME/Balatro"
-            ln -sTf "$Mods" "$XDG_DATA_HOME/Balatro/Mods"
-            game_command=("${pkgs.balatro}/bin/balatro")
-          '';
-        };
+  }: let
+    cfg = config.games.balatro;
+  in {
+    options.games.balatro = {
+      enable = lib.mkEnableOption "Balatro";
+      package = lib.mkPackageOption pkgs "balatro" {};
+    };
+
+    config = lib.mkIf cfg.enable {
+      programs.steam.config.apps.Balatro = {
+        id = 2379780;
+        preHook = ''
+          Mods="$XDG_DATA_HOME/Balatro/Mods"
+          export XDG_DATA_HOME="$STEAM_COMPAT_DATA_PATH/pfx/drive_c/users/steamuser/AppData/Roaming"
+          mkdir -p "$XDG_DATA_HOME/Balatro"
+          ln -sTf "$Mods" "$XDG_DATA_HOME/Balatro/Mods"
+          game_command=("${lib.getExe cfg.package}")
+        '';
       };
 
-      xdg.dataFile = lib.mkIf config.programs.steam.config.apps.Balatro.enable {
+      xdg.dataFile = {
         "Balatro/Mods/smods".source = pkgs.fetchFromGitHub {
           owner = "Steamodded";
           repo = "smods";

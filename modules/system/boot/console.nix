@@ -1,10 +1,14 @@
-{lib, ...}: {
-  flake.modules.nixos.theme = {config, ...}: let
+{
+  flake.modules.nixos.theme = {
+    config,
+    lib,
+    ...
+  }: let
     inherit (config.theme) colors;
   in {
     config = lib.mkIf config.console.enable {
       console = {
-        colors = builtins.genList (i: colors."color${toString i}".hex_stripped) 16;
+        colors = lib.genList (i: colors."color${toString i}".hex_stripped) 16;
       };
     };
   };

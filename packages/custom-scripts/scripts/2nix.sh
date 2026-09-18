@@ -22,7 +22,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if ((!$#)); then
+if ((! $#)); then
   set -- -
 fi
 

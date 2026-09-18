@@ -1,11 +1,11 @@
 {
-  flake.modules.homeManager.nixos = {
-    osConfig,
+  flake.modules.nixos.base = {
+    config,
     lib,
     ...
   }: {
-    services.udiskie = lib.mkIf osConfig.services.udisks2.enable {
-      enable = lib.mkDefault true;
+    config = lib.mkIf config.services.udisks2.enable {
+      hm.services.udiskie.enable = true;
     };
   };
 }

@@ -1,8 +1,4 @@
-{
-  self,
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   flake-file.inputs = {
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -12,21 +8,27 @@
 
   imports = [inputs.home-manager.flakeModules.default];
 
-  flake.modules.nixos.base = {
+  flake.modules.nixos.base = {config, ...}: {
     imports = [inputs.home-manager.nixosModules.default];
+
     home-manager = {
-      sharedModules = [self.modules.homeManager.nixos];
+      sharedModules = [
+        {
+          home.stateVersion = config.system.stateVersion;
+        }
+      ];
       useGlobalPkgs = true;
       useUserPackages = true;
       backupFileExtension = "backup";
     };
+
+    environment.pathsToLink = [
+      "/share/applications"
+      "/share/xdg-desktop-portal"
+    ];
+
+    hm.imports = [
+      inputs.self.modules.homeManager.base
+    ];
   };
-
-  flake.modules.homeManager.nixos = {osConfig, ...}: {
-    imports = [self.modules.homeManager.base];
-
-    home.stateVersion = osConfig.system.stateVersion;
-  };
-
-  flake.homeModules = self.modules.homeManager;
 }

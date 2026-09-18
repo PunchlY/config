@@ -1,4 +1,4 @@
-{self, ...}: {
+{inputs, ...}: {
   flake.meta.owner = {
     name = "PunchlY";
     username = "punchly";
@@ -10,8 +10,8 @@
 
   flake.modules.nixos.base = {lib, ...}: {
     imports = [
-      (lib.mkAliasOptionModule ["user"] ["users" "users" self.meta.owner.username])
-      (lib.mkAliasOptionModule ["hm"] ["home-manager" "users" self.meta.owner.username])
+      (lib.mkAliasOptionModule ["user"] ["users" "users" inputs.self.meta.owner.username])
+      (lib.mkAliasOptionModule ["hm"] ["home-manager" "users" inputs.self.meta.owner.username])
     ];
 
     user = {
@@ -28,13 +28,13 @@
         "input"
       ];
 
-      openssh.authorizedKeys.keys = self.meta.owner.keys;
+      openssh.authorizedKeys.keys = inputs.self.meta.owner.keys;
     };
 
     hm.programs.git = {
       settings.user = {
-        name = self.meta.owner.name;
-        email = self.meta.owner.email;
+        name = inputs.self.meta.owner.name;
+        email = inputs.self.meta.owner.email;
       };
     };
   };

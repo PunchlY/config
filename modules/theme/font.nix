@@ -1,5 +1,5 @@
-{lib, ...}: let
-  shared = {
+{
+  flake.modules.generic.theme = {
     config,
     pkgs,
     lib,
@@ -51,18 +51,17 @@
         (_family: lib.mkBefore [cfg.font.name]);
     };
   };
-in {
+
   flake.modules.nixos.theme = {config, ...}: let
     cfg = config.theme;
   in {
-    imports = [shared];
-
     fonts.packages = [cfg.font.package];
   };
 
   flake.modules.nixos.base = {
     config,
     pkgs,
+    lib,
     ...
   }: {
     fonts = {
@@ -110,10 +109,10 @@ in {
   };
 
   flake.modules.homeManager.theme = {
-    imports = [shared];
-  };
-
-  flake.modules.homeManager.nixos = {osConfig, ...}: {
-    home.packages = osConfig.fonts.packages;
+    osConfig,
+    lib,
+    ...
+  }: {
+    home.packages = lib.mkIf (osConfig != null) osConfig.fonts.packages;
   };
 }

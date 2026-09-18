@@ -18,29 +18,15 @@
 
     options.programs.niri = {
       enable = lib.mkEnableOption "Niri, a scrollable-tiling Wayland compositor";
-
       package = lib.mkPackageOption pkgs "niri" {};
     };
 
     config = lib.mkIf cfg.enable {
       environment.systemPackages = [cfg.package];
 
-      xdg.portal = {
+      hm.programs.niri = {
         enable = true;
-        xdgOpenUsePortal = true;
-
-        extraPortals = with pkgs; [
-          xdg-desktop-portal-gtk
-          xdg-desktop-portal-gnome
-        ];
-
-        config.niri = {
-          default = ["gnome" "gtk"];
-          "org.freedesktop.impl.portal.Access" = "gtk";
-          "org.freedesktop.impl.portal.FileChooser" = "gtk";
-          "org.freedesktop.impl.portal.Notification" = "gtk";
-          "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
-        };
+        package = cfg.package;
       };
 
       programs.uwsm = {
@@ -84,27 +70,42 @@
   }: let
     cfg = config.programs.niri;
   in {
+    disabledModules = ["services/window-managers/niri.nix"];
     imports = [inputs.niri.lib.internal.settings-module];
 
     options.programs.niri = {
-      enable = lib.mkEnableOption "niri";
+      enable = lib.mkEnableOption "Niri, a scrollable-tiling Wayland compositor";
 
       package = lib.mkPackageOption pkgs "niri" {};
     };
 
     config = lib.mkIf cfg.enable {
-      home.packages =
-        [cfg.package]
-        ++ (with pkgs; [
-          libnotify
-          brightnessctl
-          wl-clipboard
-          playerctl
-        ]);
+      home.packages = with pkgs; [
+        cfg.package
+        libnotify
+        brightnessctl
+        wl-clipboard
+      ];
 
       xdg.configFile."niri/config.kdl".source =
-        inputs.niri.lib.internal.validated-config-for pkgs cfg.package
-        cfg.finalConfig;
+        inputs.niri.lib.internal.validated-config-for pkgs cfg.package cfg.finalConfig;
+
+      xdg.portal = {
+        enable = true;
+        xdgOpenUsePortal = true;
+
+        extraPortals = with pkgs; [
+          xdg-desktop-portal-gnome
+        ];
+
+        config.niri = {
+          default = "gnome";
+          "org.freedesktop.impl.portal.Access" = "gnome";
+          "org.freedesktop.impl.portal.FileChooser" = "gnome";
+          "org.freedesktop.impl.portal.Notification" = "gnome";
+          "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
+        };
+      };
 
       i18n.inputMethod = {
         enable = true;
@@ -124,11 +125,11 @@
         settings.on-button-left = ''exec makoctl menu -n "$id" -- fuzzel --dmenu --prompt "Select action: " --minimal-lines'';
       };
 
+      services.playerctld.enable = true;
+
       services.cliphist.enable = true;
-      programs.niri.settings.binds."Mod+V" = {
-        hotkey-overlay.title = "Open Clipboard";
-        action.spawn = "cliphist-fuzzel-img";
-      };
+
+      services.gnome-keyring.enable = true;
 
       programs.niri.settings = {
         cursor = {
@@ -174,14 +175,7 @@
         window-rules = [
           {
             draw-border-with-background = false;
-            # geometry-corner-radius = {
-            #   bottom-left = 8.0;
-            #   bottom-right = 8.0;
-            #   top-left = 8.0;
-            #   top-right = 8.0;
-            # };
             clip-to-geometry = true;
-            # open-maximized-to-edges = false;
           }
           {
             matches = [
@@ -220,239 +214,190 @@
           }
         ];
 
-        binds = {
-          "Mod+E" = {
-            hotkey-overlay.title = "Open File Manager";
-            action.spawn-sh = "xdg-open ~";
-          };
-          "Mod+T" = {
-            hotkey-overlay.title = "Open Terminal";
-            action.spawn-sh = ''
-              mapfile -t cmd < <(xdg-terminal-exec --print-cmd)
-              exec niri msg action spawn -- "''${cmd[@]}"
-            '';
-          };
-
-          "Mod+D" = {
-            hotkey-overlay.title = "Open Application Launcher";
-            action.spawn =
-              ["fuzzel"]
-              ++ lib.cli.toCommandLineGNU {} {
-                show-actions = true;
-                terminal = "xdg-terminal-exec -- {cmd}";
-                launch-prefix = "sh -c ${lib.escapeShellArg ''
-                  if [ -z "$DESKTOP_ENTRY_ID" ]; then
-                    mapfile -t cmd < <(xdg-terminal-exec --print-cmd -- "$0" "$@")
-                    set -- "''${cmd[@]}"
-                  elif [ "$0" = "xdg-terminal-exec" ] && [ "$1" = "--" ]; then
-                    shift
-                    mapfile -t cmd < <(xdg-terminal-exec --print-cmd -- "$@")
-                    set -- "''${cmd[@]}"
-                  else
-                    set -- "$0" "$@"
-                  fi
-                  exec niri msg action spawn -- "$@"
-                ''}";
-              };
-          };
-
-          "Mod+O".action.toggle-overview = {};
-
-          "Mod+F1".action.show-hotkey-overlay = {};
-          "Mod+Shift+Q".action.close-window = {};
-
-          "Mod+Left".action.focus-column-left = {};
-          "Mod+Down".action.focus-window-down = {};
-          "Mod+Up".action.focus-window-up = {};
-          "Mod+Right".action.focus-column-right = {};
-          "Mod+WheelScrollUp".action.focus-column-left = {};
-          "Mod+Shift+WheelScrollDown".action.focus-window-down = {};
-          "Mod+Shift+WheelScrollUp".action.focus-window-up = {};
-          "Mod+WheelScrollDown".action.focus-column-right = {};
-          "Mod+H".action.focus-column-left = {};
-          "Mod+J".action.focus-window-down = {};
-          "Mod+K".action.focus-window-up = {};
-          "Mod+L".action.focus-column-right = {};
-
-          "Mod+Ctrl+Left".action.move-column-left = {};
-          "Mod+Ctrl+Down".action.move-window-down = {};
-          "Mod+Ctrl+Up".action.move-window-up = {};
-          "Mod+Ctrl+Right".action.move-column-right = {};
-          "Mod+Ctrl+WheelScrollUp".action.move-column-left = {};
-          "Mod+Ctrl+Shift+WheelScrollDown".action.move-window-down = {};
-          "Mod+Ctrl+Shift+WheelScrollUp".action.move-window-up = {};
-          "Mod+Ctrl+WheelScrollDown".action.move-column-right = {};
-          "Mod+Ctrl+H".action.move-column-left = {};
-          "Mod+Ctrl+J".action.move-window-down = {};
-          "Mod+Ctrl+K".action.move-window-up = {};
-          "Mod+Ctrl+L".action.move-column-right = {};
-
-          "Mod+Minus".action.set-column-width = "-10%";
-          "Mod+Equal".action.set-column-width = "+10%";
-          "Mod+Shift+Minus".action.set-window-height = "-10%";
-          "Mod+Shift+Equal".action.set-window-height = "+10%";
-
-          "Mod+1".action.focus-workspace = 1;
-          "Mod+2".action.focus-workspace = 2;
-          "Mod+3".action.focus-workspace = 3;
-          "Mod+4".action.focus-workspace = 4;
-          "Mod+5".action.focus-workspace = 5;
-          "Mod+6".action.focus-workspace = 6;
-          "Mod+7".action.focus-workspace = 7;
-          "Mod+8".action.focus-workspace = 8;
-          "Mod+9".action.focus-workspace = 9;
-
-          "Mod+Ctrl+1".action.move-column-to-workspace = 1;
-          "Mod+Ctrl+2".action.move-column-to-workspace = 2;
-          "Mod+Ctrl+3".action.move-column-to-workspace = 3;
-          "Mod+Ctrl+4".action.move-column-to-workspace = 4;
-          "Mod+Ctrl+5".action.move-column-to-workspace = 5;
-          "Mod+Ctrl+6".action.move-column-to-workspace = 6;
-          "Mod+Ctrl+7".action.move-column-to-workspace = 7;
-          "Mod+Ctrl+8".action.move-column-to-workspace = 8;
-          "Mod+Ctrl+9".action.move-column-to-workspace = 9;
-
-          "Mod+Ctrl+Page_Down".action.move-column-to-workspace-down = {};
-          "Mod+Ctrl+Page_Up".action.move-column-to-workspace-up = {};
-          "Mod+Ctrl+U".action.move-column-to-workspace-down = {};
-          "Mod+Ctrl+I".action.move-column-to-workspace-up = {};
-
-          "Mod+R".action.switch-preset-column-width = {};
-          "Mod+F11".action.fullscreen-window = {};
-          "Mod+Shift+F11".action.toggle-windowed-fullscreen = {};
-          "Mod+F".action.maximize-column = {};
-          "Mod+Shift+F".action.maximize-window-to-edges = {};
-
-          "Print".action.screenshot = {
-            show-pointer = false;
-          };
-          "Ctrl+Print".action.screenshot-screen = {
-            write-to-disk = true;
-          };
-          "Alt+Print".action.screenshot-window = {
-            write-to-disk = true;
-          };
-
-          "XF86AudioRaiseVolume" = {
-            allow-when-locked = true;
-            action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
-          };
-          "XF86AudioLowerVolume" = {
-            allow-when-locked = true;
-            action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
-          };
-          "XF86AudioMute" = {
-            allow-when-locked = true;
-            action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
-          };
-          "XF86AudioMicMute" = {
-            allow-when-locked = true;
-            action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
-          };
-
-          "XF86AudioNext" = {
-            allow-when-locked = true;
-            action.spawn = ["playerctl" "next"];
-          };
-          "XF86AudioPlay" = {
-            allow-when-locked = true;
-            action.spawn = ["playerctl" "play-pause"];
-          };
-          "XF86AudioPrev" = {
-            allow-when-locked = true;
-            action.spawn = ["playerctl" "previous"];
-          };
-          "XF86AudioStop" = {
-            allow-when-locked = true;
-            action.spawn = ["playerctl" "pause"];
-          };
-
-          "XF86MonBrightnessDown" = {
-            allow-when-locked = true;
-            action.spawn = ["brightnessctl" "set" "5%-"];
-          };
-          "XF86MonBrightnessUp" = {
-            allow-when-locked = true;
-            action.spawn = ["brightnessctl" "set" "5%+"];
-          };
+        binds."Mod+E" = {
+          hotkey-overlay.title = "Open File Manager";
+          action.spawn-sh = "xdg-open ~";
         };
-      };
-    };
-  };
-
-  flake.modules.homeManager.nixos = {
-    osConfig,
-    pkgs,
-    lib,
-    ...
-  }: {
-    config = lib.mkIf osConfig.programs.niri.enable {
-      programs.niri = {
-        enable = true;
-        package = osConfig.programs.niri.package;
-      };
-
-      programs.uwsm = {
-        enable = true;
-        desktopEnv.niri = {
-          MOZ_ENABLE_WAYLAND = "1";
-          GTK_USE_PORTAL = "1";
-          NIXOS_OZONE_WL = "1";
-          QT_QPA_PLATFORM = "wayland;xcb";
-          ELECTRON_OZONE_PLATFORM_HINT = "auto";
-          SDL_VIDEODRIVER = "wayland";
-          STEAM_USE_WAYLAND = "1";
-          GDK_BACKEND = "wayland";
-          QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-          QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-          GTK_CSD = "0";
+        binds."Mod+T" = {
+          hotkey-overlay.title = "Open Terminal";
+          action.spawn-sh = ''
+            mapfile -t cmd < <(xdg-terminal-exec --print-cmd)
+            exec niri msg action spawn -- "''${cmd[@]}"
+          '';
         };
-      };
-      programs.niri.settings.spawn-at-startup = [
-        {
-          sh = ''[ "$(systemctl --user show wayland-wm@niri.service -p MainPID --value)" -eq "$(${lib.getExe pkgs.lsof} -t "$NIRI_SOCKET" 2>&1)" ] && uwsm finalize'';
-        }
-      ];
 
-      programs.niri.settings.binds."Mod+Escape" = {
-        hotkey-overlay.title = "Open Command Menu";
-        action.spawn =
-          [(lib.getExe pkgs.just)]
-          ++ lib.cli.toCommandLineGNU {} {
-            unsorted = true;
-            choose = true;
-            chooser = "fuzzel --dmenu --only-match --minimal-lines";
-            justfile = "${./justfile}";
-          };
+        binds."Mod+D" = {
+          hotkey-overlay.title = "Open Application Launcher";
+          action.spawn =
+            ["fuzzel"]
+            ++ lib.cli.toCommandLineGNU {} {
+              show-actions = true;
+              terminal = "xdg-terminal-exec -- {cmd}";
+              launch-prefix = "sh -c ${lib.escapeShellArg ''
+                if [ -z "$DESKTOP_ENTRY_ID" ]; then
+                  mapfile -t cmd < <(xdg-terminal-exec --print-cmd -- "$0" "$@")
+                  set -- "''${cmd[@]}"
+                elif [ "$0" = "xdg-terminal-exec" ] && [ "$1" = "--" ]; then
+                  shift
+                  mapfile -t cmd < <(xdg-terminal-exec --print-cmd -- "$@")
+                  set -- "''${cmd[@]}"
+                else
+                  set -- "$0" "$@"
+                fi
+                exec niri msg action spawn -- "$@"
+              ''}";
+            };
+        };
+
+        binds."Mod+V" = {
+          hotkey-overlay.title = "Open Clipboard";
+          action.spawn = "cliphist-fuzzel-img";
+        };
+
+        binds."Mod+O".action.toggle-overview = {};
+
+        binds."Mod+F1".action.show-hotkey-overlay = {};
+        binds."Mod+Shift+Q".action.close-window = {};
+
+        binds."Mod+Left".action.focus-column-left = {};
+        binds."Mod+Down".action.focus-window-down = {};
+        binds."Mod+Up".action.focus-window-up = {};
+        binds."Mod+Right".action.focus-column-right = {};
+        binds."Mod+WheelScrollUp".action.focus-column-left = {};
+        binds."Mod+Shift+WheelScrollDown".action.focus-window-down = {};
+        binds."Mod+Shift+WheelScrollUp".action.focus-window-up = {};
+        binds."Mod+WheelScrollDown".action.focus-column-right = {};
+        binds."Mod+H".action.focus-column-left = {};
+        binds."Mod+J".action.focus-window-down = {};
+        binds."Mod+K".action.focus-window-up = {};
+        binds."Mod+L".action.focus-column-right = {};
+
+        binds."Mod+Ctrl+Left".action.move-column-left = {};
+        binds."Mod+Ctrl+Down".action.move-window-down = {};
+        binds."Mod+Ctrl+Up".action.move-window-up = {};
+        binds."Mod+Ctrl+Right".action.move-column-right = {};
+        binds."Mod+Ctrl+WheelScrollUp".action.move-column-left = {};
+        binds."Mod+Ctrl+Shift+WheelScrollDown".action.move-window-down = {};
+        binds."Mod+Ctrl+Shift+WheelScrollUp".action.move-window-up = {};
+        binds."Mod+Ctrl+WheelScrollDown".action.move-column-right = {};
+        binds."Mod+Ctrl+H".action.move-column-left = {};
+        binds."Mod+Ctrl+J".action.move-window-down = {};
+        binds."Mod+Ctrl+K".action.move-window-up = {};
+        binds."Mod+Ctrl+L".action.move-column-right = {};
+
+        binds."Mod+Minus".action.set-column-width = "-10%";
+        binds."Mod+Equal".action.set-column-width = "+10%";
+        binds."Mod+Shift+Minus".action.set-window-height = "-10%";
+        binds."Mod+Shift+Equal".action.set-window-height = "+10%";
+
+        binds."Mod+1".action.focus-workspace = 1;
+        binds."Mod+2".action.focus-workspace = 2;
+        binds."Mod+3".action.focus-workspace = 3;
+        binds."Mod+4".action.focus-workspace = 4;
+        binds."Mod+5".action.focus-workspace = 5;
+        binds."Mod+6".action.focus-workspace = 6;
+        binds."Mod+7".action.focus-workspace = 7;
+        binds."Mod+8".action.focus-workspace = 8;
+        binds."Mod+9".action.focus-workspace = 9;
+
+        binds."Mod+Ctrl+1".action.move-column-to-workspace = 1;
+        binds."Mod+Ctrl+2".action.move-column-to-workspace = 2;
+        binds."Mod+Ctrl+3".action.move-column-to-workspace = 3;
+        binds."Mod+Ctrl+4".action.move-column-to-workspace = 4;
+        binds."Mod+Ctrl+5".action.move-column-to-workspace = 5;
+        binds."Mod+Ctrl+6".action.move-column-to-workspace = 6;
+        binds."Mod+Ctrl+7".action.move-column-to-workspace = 7;
+        binds."Mod+Ctrl+8".action.move-column-to-workspace = 8;
+        binds."Mod+Ctrl+9".action.move-column-to-workspace = 9;
+
+        binds."Mod+Ctrl+Page_Down".action.move-column-to-workspace-down = {};
+        binds."Mod+Ctrl+Page_Up".action.move-column-to-workspace-up = {};
+        binds."Mod+Ctrl+U".action.move-column-to-workspace-down = {};
+        binds."Mod+Ctrl+I".action.move-column-to-workspace-up = {};
+
+        binds."Mod+R".action.switch-preset-column-width = {};
+        binds."Mod+F11".action.fullscreen-window = {};
+        binds."Mod+Shift+F11".action.toggle-windowed-fullscreen = {};
+        binds."Mod+F".action.maximize-column = {};
+        binds."Mod+Shift+F".action.maximize-window-to-edges = {};
+
+        binds."Print".action.screenshot = {
+          show-pointer = false;
+        };
+        binds."Ctrl+Print".action.screenshot-screen = {
+          write-to-disk = true;
+        };
+        binds."Alt+Print".action.screenshot-window = {
+          write-to-disk = true;
+        };
+
+        binds."XF86AudioRaiseVolume" = {
+          allow-when-locked = true;
+          action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
+        };
+        binds."XF86AudioLowerVolume" = {
+          allow-when-locked = true;
+          action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
+        };
+        binds."XF86AudioMute" = {
+          allow-when-locked = true;
+          action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
+        };
+        binds."XF86AudioMicMute" = {
+          allow-when-locked = true;
+          action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
+        };
+
+        binds."XF86AudioNext" = {
+          allow-when-locked = true;
+          action.spawn = ["playerctl" "next"];
+        };
+        binds."XF86AudioPlay" = {
+          allow-when-locked = true;
+          action.spawn = ["playerctl" "play-pause"];
+        };
+        binds."XF86AudioPrev" = {
+          allow-when-locked = true;
+          action.spawn = ["playerctl" "previous"];
+        };
+        binds."XF86AudioStop" = {
+          allow-when-locked = true;
+          action.spawn = ["playerctl" "pause"];
+        };
+
+        binds."XF86MonBrightnessDown" = {
+          allow-when-locked = true;
+          action.spawn = ["brightnessctl" "set" "5%-"];
+        };
+        binds."XF86MonBrightnessUp" = {
+          allow-when-locked = true;
+          action.spawn = ["brightnessctl" "set" "5%+"];
+        };
       };
     };
   };
 
   flake.modules.homeManager.theme = {
-    osConfig,
     config,
     lib,
     ...
   }: let
+    cfg = config.programs.niri;
     inherit (config.theme) cursor colors;
   in {
-    config = lib.mkIf osConfig.programs.niri.enable {
+    config = lib.mkIf cfg.enable {
       programs.niri.settings = {
         cursor = {
           size = cursor.size;
           theme = cursor.name;
         };
 
-        layout = {
-          border = {
-            active.color = colors.primary.hex;
-            inactive.color = colors.surface_variant.hex;
-          };
+        layout.border = {
+          active.color = colors.primary.hex;
+          inactive.color = colors.surface_variant.hex;
         };
 
-        overview = {
-          backdrop-color = colors.background.hex;
-        };
+        overview.backdrop-color = colors.background.hex;
       };
     };
   };

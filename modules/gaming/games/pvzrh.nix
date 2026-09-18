@@ -5,15 +5,21 @@
     ];
   };
 
-  flake.modules.homeManager.base = {
+  flake.modules.homeManager.gaming = {
     config,
     pkgs,
     lib,
     ...
-  }: {
-    programs.steam.config = lib.mkIf config.programs.steam.config.enable {
-      nonSteamApps."Plants vs. Zombies: RH" = {
-        enable = lib.mkDefault false;
+  }: let
+    cfg = config.games.pvz-rh;
+  in {
+    options.games.pvz-rh = {
+      enable = lib.mkEnableOption "Plants vs. Zombies: RH";
+      package = lib.mkPackageOption pkgs "pvz-rh" {};
+    };
+
+    config = lib.mkIf cfg.enable {
+      programs.steam.config.nonSteamApps."Plants vs. Zombies: RH" = {
         target = "${pkgs.pvz-rh}/PlantsVsZombiesRH.exe";
         compatTool = "proton_experimental";
       };

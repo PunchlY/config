@@ -1,5 +1,9 @@
-{lib, ...}: {
-  flake.modules.nixos.base = {config, ...}: {
+{
+  flake.modules.nixos.base = {
+    config,
+    lib,
+    ...
+  }: {
     config = lib.mkIf config.services.logind.enable {
       services.logind.settings.Login = {
         HandlePowerKey = lib.mkDefault "suspend";

@@ -20,7 +20,7 @@
     ...
   }: let
     inherit (config.theme) colors font opacity;
-    alpha = lib.toHexString (builtins.ceil (opacity * 255));
+    alpha = lib.toHexString (lib.ceil (opacity * 255));
   in {
     config = lib.mkIf config.services.mako.enable {
       services.mako.settings = with colors; {

@@ -1,15 +1,35 @@
 {
+  flake.modules.homeManager.base = {
+    config,
+    pkgs,
+    lib,
+    ...
+  }: {
+    config = lib.mkIf config.programs.swaylock.enable {
+      programs.swaylock = {
+        package = pkgs.swaylock-effects;
+        settings = {
+          daemonize = true;
+          clock = true;
+          indicator = true;
+          timestr = "%H:%M:%S";
+          datestr = "%Y-%m-%d";
+        };
+      };
+    };
+  };
+
   flake.modules.homeManager.theme = {
     config,
     lib,
     ...
   }: let
+    cfg = config.programs.swaylock;
     inherit (config.theme) colors wallpaper;
   in {
-    config = lib.mkIf config.programs.swaylock.enable {
+    config = lib.mkIf cfg.enable {
       programs.swaylock.settings = with colors; {
         image = "${wallpaper}";
-
         color = background.hex_stripped;
         inside-color = surface_container.hex_stripped;
         inside-clear-color = secondary_container.hex_stripped;

@@ -22,8 +22,6 @@
     };
   };
 
-  flake.nixvimModules = inputs.self.modules.nixvim;
-
   flake.modules.homeManager.base = {
     config,
     lib,

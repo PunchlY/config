@@ -1,7 +1,6 @@
 {
   inputs,
   config,
-  self,
   lib,
   ...
 }: {
@@ -50,10 +49,8 @@
 
     nixpkgs.overlays = [
       inputs.nur.overlays.default
-      self.overlays.default
+      inputs.self.overlays.default
     ];
-
-    flake.nixosModules = self.modules.nixos;
 
     flake.modules.nixos.base = {
       nixpkgs = config.nixpkgs;
@@ -63,8 +60,16 @@
       nixpkgs = config.nixpkgs;
     };
 
-    perSystem = {system, ...}: {
-      _module.args.final = import inputs.nixpkgs (config.nixpkgs // {inherit system;});
+    perSystem = {
+      system,
+      pkgs,
+      ...
+    }: {
+      _module.args.pkgs = import inputs.nixpkgs {
+        inherit system;
+        inherit (config.nixpkgs) config;
+      };
+      _module.args.final = pkgs.appendOverlays config.nixpkgs.overlays;
     };
   };
 }

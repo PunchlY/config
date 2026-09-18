@@ -1,7 +1,8 @@
-{lib, ...}: {
+{
   flake.modules.homeManager.base = {
     config,
     pkgs,
+    lib,
     ...
   }: {
     config = lib.mkIf config.programs.alacritty.enable {
@@ -71,7 +72,11 @@
     };
   };
 
-  flake.modules.homeManager.theme = {config, ...}: let
+  flake.modules.homeManager.theme = {
+    config,
+    lib,
+    ...
+  }: let
     inherit (config.theme) colors font opacity;
   in {
     config = lib.mkIf config.programs.alacritty.enable {
@@ -111,7 +116,7 @@
             white = color15.hex;
           };
           indexed_colors =
-            builtins.genList (i: {
+            lib.genList (i: {
               index = i + 16;
               color = colors."color${toString (i + 16)}".hex;
             })

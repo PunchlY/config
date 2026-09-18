@@ -1,5 +1,5 @@
 {
-  self,
+  inputs,
   lib,
   config,
   ...
@@ -24,6 +24,16 @@
             type = lib.types.unspecified;
           };
         };
+        gaming = {
+          enable = lib.mkEnableOption "gaming";
+          games = lib.mkOption {
+            type = lib.types.attrsOf (lib.types.submodule ({name, ...}: {
+              options = {
+                enable = lib.mkEnableOption name;
+              };
+            }));
+          };
+        };
       };
     }));
   };
@@ -35,20 +45,24 @@
         modules =
           [
             cfg.module
-            self.modules.nixos.base
+            inputs.self.modules.nixos.base
             {
               networking.hostName = cfg.hostName;
               system.stateVersion = "26.05";
             }
           ]
           ++ lib.optionals cfg.theme.enable [
-            self.modules.nixos.theme
+            inputs.self.modules.nixos.theme
             ({pkgs, ...}: {
               theme.wallpaper =
-                if builtins.isFunction cfg.theme.wallpaper
+                if lib.isFunction cfg.theme.wallpaper
                 then pkgs.callPackage cfg.theme.wallpaper {}
                 else cfg.theme.wallpaper;
             })
+          ]
+          ++ lib.optionals cfg.gaming.enable [
+            inputs.self.modules.nixos.gaming
+            {hm.games = cfg.gaming.games;}
           ];
       });
 }

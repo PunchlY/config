@@ -1,5 +1,9 @@
-{lib, ...}: {
-  flake.modules.homeManager.base = {config, ...}: {
+{
+  flake.modules.homeManager.base = {
+    config,
+    lib,
+    ...
+  }: {
     config = lib.mkIf config.programs.ghostty.enable {
       programs.ghostty = {
         systemd.enable = true;
@@ -7,7 +11,11 @@
     };
   };
 
-  flake.modules.homeManager.theme = {config, ...}: let
+  flake.modules.homeManager.theme = {
+    config,
+    lib,
+    ...
+  }: let
     inherit (config.theme) colors font opacity;
   in {
     config = lib.mkIf config.programs.ghostty.enable {
@@ -18,7 +26,7 @@
           theme = "md3";
         };
         themes.md3 = with colors; {
-          palette = builtins.genList (i: "${toString i}=${colors."color${toString i}".hex}") 256;
+          palette = lib.genList (i: "${toString i}=${colors."color${toString i}".hex}") 256;
           palette-generate = true;
           selection-background = primary.hex_stripped;
           selection-foreground = on_primary.hex_stripped;

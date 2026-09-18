@@ -10,8 +10,10 @@
     pkgs,
     lib,
     ...
-  }: {
-    config = lib.mkIf config.programs.chromium.enable {
+  }: let
+    cfg = config.programs.chromium;
+  in {
+    config = lib.mkIf cfg.enable {
       environment.systemPackages = [
         (pkgs.google-chrome.override {
           commandLineArgs = [
@@ -23,31 +25,28 @@
         })
       ];
 
-      programs.chromium = let
-        extensions = {
+      programs.chromium = {
+        extensions = lib.attrNames cfg.extraOpts.ExtensionSettings;
+        extraOpts.ExtensionSettings = {
+          # uBlock Origin Lite
           "ddkjiahejlhfcafbddmgiahcphecmpfh" = {
-            # uBlock Origin Lite
             toolbar_pin = "force_pinned";
           };
+          # IPvFoo
           "ecanpcehffngcegjmadlcijfolapggal" = {
-            # IPvFoo
             toolbar_pin = "force_pinned";
           };
+          # WebRTC Control
           "fjkmabmdepjfammlpliljpnbhleegehm" = {
-            # WebRTC Control
             toolbar_pin = "force_pinned";
           };
-          "dhdgffkkebhmkfjojejmpbldmpobfkfo" = {
-            # Tampermonkey
-          };
+          # Tampermonkey
+          "dhdgffkkebhmkfjojejmpbldmpobfkfo" = {};
+          # Aria2 Integration
           "hnenidncmoeebipinjdfniagjnfjbapi" = {
-            # Aria2 Integration
             toolbar_pin = "force_pinned";
           };
         };
-      in {
-        extensions = lib.attrNames extensions;
-        extraOpts.ExtensionSettings = extensions;
         extraOpts = {
           RestoreOnStartup = 1;
           DefaultBrowserSettingEnabled = false;

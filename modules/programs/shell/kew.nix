@@ -15,7 +15,7 @@
     toKewINI = lib.generators.toINI {
       mkKeyValue = lib.generators.mkKeyValueDefault {
         mkValueString = v:
-          if builtins.isBool v
+          if lib.isBool v
           then boolToStr v
           else lib.generators.mkValueStringDefault {} v;
       } "=";

@@ -41,7 +41,7 @@
   }: let
     inherit (config.theme) font colors opacity;
     cfg = config.programs.swayimg;
-    opacity_hex = lib.fixedWidthString 2 "0" (lib.toHexString (builtins.ceil (opacity * 255)));
+    opacity_hex = lib.fixedWidthString 2 "0" (lib.toHexString (lib.ceil (opacity * 255)));
   in {
     config = lib.mkIf cfg.enable {
       programs.swayimg.initLua = with colors; ''

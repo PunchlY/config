@@ -1,5 +1,9 @@
-{lib, ...}: {
-  flake.modules.nixos.base = {config, ...}: {
+{
+  flake.modules.nixos.base = {
+    config,
+    lib,
+    ...
+  }: {
     hardware.bluetooth = lib.mkIf config.hardware.bluetooth.enable {
       powerOnBoot = true;
       settings = {

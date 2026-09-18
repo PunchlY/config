@@ -1,16 +1,21 @@
 {
-  flake.modules.homeManager.base = {
+  flake.modules.homeManager.gaming = {
     config,
     pkgs,
     lib,
     ...
-  }: {
-    programs.steam.config = lib.mkIf config.programs.steam.config.enable {
-      nonSteamApps."Brown Dust 2" = {
-        enable = lib.mkDefault false;
+  }: let
+    cfg = config.games.browndust2;
+  in {
+    options.games.browndust2 = {
+      enable = lib.mkEnableOption "Brown Dust 2";
+      package = lib.mkPackageOption pkgs "browndust2" {};
+    };
 
+    config = lib.mkIf cfg.enable {
+      programs.steam.config.nonSteamApps."Brown Dust 2" = {
         compatTool = pkgs.dwproton-bin;
-        target = "${pkgs.db2}/BD2StarterSetup.exe";
+        target = "${cfg.package}/BD2StarterSetup.exe";
 
         artwork = {
           cover = pkgs.fetchurl {

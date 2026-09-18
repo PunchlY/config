@@ -28,10 +28,10 @@
       pictures = "${config.home.homeDirectory}/med/pictures";
       videos = "${config.home.homeDirectory}/med/videos";
       templates = "${config.xdg.userDirs.documents}/templates";
+      projects = "${config.home.homeDirectory}/src";
 
       extraConfig = {
         SCREENSHOTS = "${config.xdg.userDirs.pictures}/screenshots";
-        PROJECTS = "${config.home.homeDirectory}/src";
         GAME = "${config.home.homeDirectory}/med/games";
         MEDIA = "${config.home.homeDirectory}/med";
       };

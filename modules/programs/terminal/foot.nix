@@ -101,18 +101,18 @@
             background = colors.surface.hex_stripped;
             flash = colors.primary.hex_stripped;
           }
-          // builtins.listToAttrs (
-            builtins.genList (i: {
+          // lib.listToAttrs (
+            lib.genList (i: {
               name = "regular${toString i}";
               value = colors."color${toString i}".hex_stripped;
             })
             8
-            ++ builtins.genList (i: {
+            ++ lib.genList (i: {
               name = "bright${toString i}";
               value = colors."color${toString (i + 8)}".hex_stripped;
             })
             8
-            ++ builtins.genList (i: {
+            ++ lib.genList (i: {
               name = toString i;
               value = colors."color${toString i}".hex_stripped;
             })

@@ -17,7 +17,7 @@ mapfile -t paths < <(
     @coreutils@/bin/tr ':' '\n' <<<"$PATH"
   fi
 )
-((!${#paths[@]})) && exit
+((! ${#paths[@]})) && exit
 
 if [ -t 1 ]; then
   is_tty=1
