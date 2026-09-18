@@ -5,7 +5,7 @@
       minecraft-je.enable = true;
       balatro.enable = true;
       browndust2.enable = true;
-      celeste64.enable=true;
+      celeste64.enable = true;
       helltaker.enable = true;
       katawa-shoujo-re-engineered.enable = true;
       pvz-rh.enable = true;
