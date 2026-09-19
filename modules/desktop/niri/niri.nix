@@ -96,13 +96,14 @@
 
         extraPortals = with pkgs; [
           xdg-desktop-portal-gnome
+          xdg-desktop-portal-gtk
         ];
 
         config.niri = {
-          default = "gnome";
-          "org.freedesktop.impl.portal.Access" = "gnome";
-          "org.freedesktop.impl.portal.FileChooser" = "gnome";
-          "org.freedesktop.impl.portal.Notification" = "gnome";
+          default = ["gnome" "gtk"];
+          "org.freedesktop.impl.portal.Access" = "gtk";
+          "org.freedesktop.impl.portal.FileChooser" = "gtk";
+          "org.freedesktop.impl.portal.Notification" = "gtk";
           "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
         };
       };
