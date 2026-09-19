@@ -6,6 +6,7 @@
   }: {
     home.shellAliases = {
       ".." = "cd ..";
+      "-" = "cd -";
 
       grep = lib.mkIf config.programs.grep.enable "grep --color=auto";
 
