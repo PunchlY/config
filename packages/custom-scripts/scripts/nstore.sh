@@ -1,15 +1,22 @@
 #! @runtimeShell@
 set -euo pipefail
 
-[ -z "$1" ] && exit
+(($# == 0)) && exit 1
 
-store="$(@nix@/bin/nix-store --add-fixed sha256 "$1")"
-
-hash="$(@nix@/bin/nix hash file --type sha256 --sri "$1")"
+url="$(@python314@/bin/python -c 'from pathlib import Path; import sys; print(Path(sys.argv[1]).resolve().as_uri())' "$1")"
 
 name="$(@coreutils@/bin/basename "$1")"
 
-@nix@/bin/nix-store --add-root "$XDG_DATA_HOME/nstore/$name" --indirect --realise $store
+. <(
+  @nix@/bin/nix store prefetch-file --json \
+    --name "$name" \
+    "$url" |
+    @yq-go@/bin/yq -o shell
+)
+
+@coreutils@/bin/mkdir -p "${NSTORE_DIR:=${XDG_DATA_HOME:-$HOME/.local/share}/nstore}"
+
+@nix@/bin/nix-store --add-root "$NSTORE_DIR/$name" --indirect --realise "$storePath"
 
 echo "requireFile {
   name = \"$name\";
