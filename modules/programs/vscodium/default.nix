@@ -31,6 +31,12 @@
             kisstkondoros.vscode-gutter-preview
             intellsmi.comment-translate
             codeinchinese.englishchinesedictionary
+
+            bierner.github-markdown-preview
+            bierner.markdown-preview-github-styles
+            bierner.markdown-emoji
+            bierner.markdown-checkbox
+            bierner.markdown-footnotes
           ])
           ++ (with pkgs.open-vsx; [
             jeanp413.open-remote-ssh
