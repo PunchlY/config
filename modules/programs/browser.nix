@@ -46,11 +46,17 @@
           "hnenidncmoeebipinjdfniagjnfjbapi" = {
             toolbar_pin = "force_pinned";
           };
+          # Firenvim
+          "egpjdkipkomnmjhjmdamaniclmdlobbo" = {};
         };
         extraOpts = {
           RestoreOnStartup = 1;
           DefaultBrowserSettingEnabled = false;
         };
+      };
+
+      hm.xdg.configFile."google-chrome/NativeMessagingHosts/firenvim.json" = {
+        source = pkgs.firenvim-native;
       };
     };
   };

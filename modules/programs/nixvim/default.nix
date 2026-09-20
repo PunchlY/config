@@ -8,7 +8,7 @@
   nixvim = {
     packages = {
       enable = true;
-      nameFunction = name: "nvim-${name}";
+      nameFunction = name: "neovim-${name}";
     };
     checks.enable = true;
   };
