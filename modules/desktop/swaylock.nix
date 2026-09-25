@@ -1,24 +1,4 @@
 {
-  flake.modules.homeManager.base = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: {
-    config = lib.mkIf config.programs.swaylock.enable {
-      programs.swaylock = {
-        package = pkgs.swaylock-effects;
-        settings = {
-          daemonize = true;
-          clock = true;
-          indicator = true;
-          timestr = "%H:%M:%S";
-          datestr = "%Y-%m-%d";
-        };
-      };
-    };
-  };
-
   flake.modules.homeManager.theme = {
     config,
     lib,

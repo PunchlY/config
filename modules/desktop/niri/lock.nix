@@ -1,7 +1,9 @@
 {
   flake.modules.nixos.base = {
     config,
+    pkgs,
     lib,
+    utils,
     ...
   }: {
     config = lib.mkIf config.programs.niri.enable {
@@ -21,22 +23,23 @@
         wantedBy = ["lock.target"];
         serviceConfig = {
           Type = "forking";
-          ExecStart = "swaylock";
+          ExecStart = utils.escapeSystemdExecArgs [
+            (lib.getExe pkgs.swaylock-effects)
+            "--daemonize"
+            "--clock"
+            "--indicator"
+            "--timestr=%H:%M:%S"
+            "--datestr=%Y-%m-%d"
+          ];
           Restart = "on-failure";
           RestartSec = 0;
         };
       };
-    };
-  };
-
-  flake.modules.homeManager.base = {
-    config,
-    lib,
-    ...
-  }: {
-    config = lib.mkIf config.programs.niri.enable {
-      programs.swaylock.enable = true;
-      programs.niri.settings = {
+      hm.programs.swaylock = {
+        package = lib.mkDefault null;
+        enable = true;
+      };
+      hm.programs.niri.settings = {
         binds."Mod+Alt+L" = {
           hotkey-overlay.title = "Lock the Screen";
           allow-inhibiting = false;

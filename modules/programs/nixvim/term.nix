@@ -8,11 +8,6 @@
         mode = ["n" "i" "v" "s" "t"];
       }
       {
-        action = "<cmd>ToggleTerm<cr>";
-        key = "<leader>t";
-        mode = ["n" "i" "v" "s" "t"];
-      }
-      {
         action = "<C-\\><C-n>";
         key = "<esc>";
         mode = "t";
