@@ -21,12 +21,13 @@
         substituters = config.flake-file.nixConfig.substituters or [];
         trusted-public-keys = config.flake-file.nixConfig.trusted-public-keys or [];
         trusted-users = ["root" "@wheel"];
+
+        nix-path = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
       };
 
       channel.enable = false;
 
       registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
-      nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
     };
   };
 }

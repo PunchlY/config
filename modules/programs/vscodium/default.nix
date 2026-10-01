@@ -93,7 +93,7 @@
             "https://json-schema.org/" = true;
             "https://developer.microsoft.com/json-schemas/" = true;
             "https://opencode.ai/" = true;
-	    "https://models.dev/" = true;
+            "https://models.dev/" = true;
           };
         };
       };

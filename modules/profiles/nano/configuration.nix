@@ -104,9 +104,11 @@
       };
     };
 
-    virtualisation.containers.registries.search = [
-      "docker.io"
-    ];
+    virtualisation.containers.registries.settings = {
+      search = [
+        "docker.io"
+      ];
+    };
     virtualisation.podman = {
       enable = true;
       dockerCompat = true;
