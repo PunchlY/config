@@ -44,24 +44,22 @@
       "f ${config.services.home-assistant.configDir}/automations.yaml 0755 hass hass"
       "f ${config.services.home-assistant.configDir}/scenes.yaml 0755 hass hass"
       "f ${config.services.home-assistant.configDir}/scripts.yaml 0755 hass hass"
-      "f ${config.services.home-assistant.configDir}/homeassistant.yaml 0755 hass hass"
     ];
 
     services.home-assistant = {
       enable = true;
       customComponents = with pkgs; [
-        midea-auto-cloud
-        haier
         home-assistant-custom-components.xiaomi_home
+        home-assistant-grid-south
+        home-assistant-haier
+        home-assistant-haismart-local
+        home-assistant-midea-auto-cloud
       ];
 
-      customLovelaceModules =
-        (with pkgs.home-assistant-custom-lovelace-modules; [
-          mushroom
-        ])
-        ++ (with pkgs; [
-          nur.repos.mrene.timer-bar-card
-        ]);
+      customLovelaceModules = with pkgs; [
+        home-assistant-custom-lovelace-modules.mushroom
+        nur.repos.mrene.timer-bar-card
+      ];
 
       themes = with pkgs.home-assistant-themes; [
         material-you-theme
@@ -76,6 +74,7 @@
         "homekit"
         "ffmpeg"
         "zeroconf"
+        "midea"
       ];
       config = {
         "automation ui" = "!include automations.yaml";
@@ -83,7 +82,7 @@
         "script ui" = "!include scripts.yaml";
 
         default_config = {};
-        "homeassistant ui" = "!include homeassistant.yaml";
+
         homeassistant = {
           external_url = "https://hass.punchly.eu.org";
           internal_url = "http://hass:8123/";
