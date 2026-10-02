@@ -48,59 +48,15 @@
           "serif"
           "sansSerif"
         ]
-        (_family: lib.mkBefore [cfg.font.name]);
-    };
-  };
-
-  flake.modules.nixos.theme = {config, ...}: let
-    cfg = config.theme;
-  in {
-    fonts.packages = [cfg.font.package];
-  };
-
-  flake.modules.nixos.base = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: {
-    fonts = {
-      enableDefaultPackages = false;
-      packages = with pkgs; (
-        (lib.optionals (!config ? theme) [
-          nur.repos.definfo.sarasa-term-sc-nerd
+        (_family: [
+          cfg.font.name
+          "Noto Sans Mono CJK SC"
+          "Noto Sans Mono"
+          "Noto Color Emoji"
+          "Noto Emoji"
         ])
-        ++ [
-          noto-fonts-cjk-sans
-          noto-fonts
-          noto-fonts-color-emoji
-          noto-fonts-monochrome-emoji
-
-          material-icons
-          lmmath
-        ]
-      );
-      fontconfig.defaultFonts =
-        lib.genAttrs
-        [
-          "monospace"
-          "serif"
-          "sansSerif"
-        ]
-        (_family:
-          lib.mkAfter (
-            (lib.optionals (!config ? theme) [
-              "Sarasa Term SC Nerd"
-            ])
-            ++ [
-              "Noto Sans Mono CJK SC"
-              "Noto Sans Mono"
-              "Noto Color Emoji"
-              "Noto Emoji"
-            ]
-          ))
         // {
-          emoji = lib.mkAfter [
+          emoji = [
             "Noto Color Emoji"
             "Noto Emoji"
           ];
@@ -108,11 +64,46 @@
     };
   };
 
-  flake.modules.homeManager.theme = {
-    osConfig,
-    lib,
+  flake.modules.nixos.theme = {
+    config,
+    pkgs,
     ...
-  }: {
-    home.packages = lib.mkIf (osConfig != null) osConfig.fonts.packages;
+  }: let
+    cfg = config.theme;
+  in {
+    fonts = {
+      enableDefaultPackages = false;
+      packages = with pkgs; [
+        cfg.font.package
+
+        noto-fonts-cjk-sans
+        noto-fonts
+        noto-fonts-color-emoji
+        noto-fonts-monochrome-emoji
+
+        material-icons
+        lmmath
+      ];
+    };
+  };
+
+  flake.modules.homeManager.theme = {
+    config,
+    pkgs,
+    ...
+  }: let
+    cfg = config.theme;
+  in {
+    home.packages = with pkgs; [
+      cfg.font.package
+
+      noto-fonts-cjk-sans
+      noto-fonts
+      noto-fonts-color-emoji
+      noto-fonts-monochrome-emoji
+
+      material-icons
+      lmmath
+    ];
   };
 }
