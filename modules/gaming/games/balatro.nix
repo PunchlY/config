@@ -1,11 +1,4 @@
 {
-  nixpkgs.config = {
-    allowUnfreePackages = [
-      "balatro"
-      "Balatro.exe"
-    ];
-  };
-
   flake.modules.homeManager.gaming = {
     config,
     pkgs,
@@ -13,24 +6,31 @@
     ...
   }: let
     cfg = config.games.balatro;
+    lovely = pkgs.fetchzip {
+      url = "https://github.com/ethangreen-dev/lovely-injector/releases/download/v0.10.0/lovely-x86_64-pc-windows-msvc.zip";
+      hash = "sha256-wUYHdGlW2Rubl5+VRHEdYcHh0nPEsnw2uksKCpX8Gok=";
+    };
   in {
     options.games.balatro = {
       enable = lib.mkEnableOption "Balatro";
-      package = lib.mkPackageOption pkgs "balatro" {};
     };
 
     config = lib.mkIf cfg.enable {
-      programs.steam.config.apps.Balatro = {
-        id = 2379780;
-        preHook = ''
-          Mods="$XDG_DATA_HOME/Balatro/Mods"
-          export XDG_DATA_HOME="$STEAM_COMPAT_DATA_PATH/pfx/drive_c/users/steamuser/AppData/Roaming"
-          mkdir -p "$XDG_DATA_HOME/Balatro"
-          ln -sTf "$Mods" "$XDG_DATA_HOME/Balatro/Mods"
-          game_command=("${lib.getExe cfg.package}")
-        '';
-      };
+      programs.steam.config.apps."2379780" = {
+        dllOverrides = {
+          winmm = "n,b";
+        };
 
+        files.game.place = {
+          "winmm.dll".source = "${lovely}/winmm.dll";
+        };
+        files.game.remove = [
+          "version.dll"
+        ];
+        files.prefix.place = {
+          "drive_c/users/steamuser/AppData/Roaming/Balatro/Mods".source = config.lib.file.mkOutOfStoreSymlink "${config.xdg.dataHome}/Balatro/Mods";
+        };
+      };
       xdg.dataFile = {
         "Balatro/Mods/smods".source = pkgs.fetchFromGitHub {
           owner = "Steamodded";
@@ -38,22 +38,21 @@
           tag = "1.0.0-beta-1814a";
           hash = "sha256-5chUzZSfUDUqtlMzSdSa1fZRHOPvRIdwHnKK83f4ecs=";
         };
-
         "Balatro/Mods/JokerDisplay".source = pkgs.fetchFromGitHub {
           owner = "nh6574";
           repo = "JokerDisplay";
-          tag = "v1.10.7";
-          hash = "sha256-wXr/1ozqYcXizzOdqa9nt5n8oYM5zVyghZShyJZEMiQ=";
+          tag = "v2.0.4";
+          hash = "sha256-GDGyV3yHmum7mfITcFdvUIP51SPoY5/WdXPx6qLcn6w=";
         };
         "Balatro/Mods/Malverk".source = pkgs.fetchFromGitHub {
           owner = "Eremel";
           repo = "Malverk";
-          tag = "v1.1.4a";
-          hash = "sha256-KN7OYTknhJ5J047Fl1Gfzg66pghR0xezXfY31R9+E1U=";
+          tag = "v1.1.5";
+          hash = "sha256-T2xL6gSS/GPXOiHRTwsbW/S/XksXukZiUT+HYws0qHE=";
         };
         "Balatro/Mods/Cartomancer".source = pkgs.fetchzip {
-          url = "https://github.com/stupxd/Cartomancer/releases/download/v4.17c/Cartomancer-v4.17c.zip";
-          hash = "sha256-av4R+nrjItyz69woZPYnzOOB/n2Yb9vEkjRgmTT79ws=";
+          url = "https://github.com/stupxd/Cartomancer/releases/download/v.4.17e/Cartomancer.zip";
+          hash = "sha256-8Be0cqUfJJE5iX2I9739kRPCBtZRJ9KH35GsrsbHXGs=";
         };
         "Balatro/Mods/Blueprint".source = pkgs.fetchFromGitHub {
           owner = "stupxd";
@@ -98,8 +97,8 @@
           hash = "sha256-PRkeKG3DiiolWqnV/BsmUZxMmCMN5/l95vyvaI78/Ks=";
         };
         "Balatro/Mods/SilkTouch".source = pkgs.fetchzip {
-          url = "https://github.com/HuyTheKiller/SilkTouch/releases/download/1.2.3/SilkTouch.zip";
-          hash = "sha256-YtYKSF8ioECLovluQ5aTIH9wfcstlG0NvdPqohdrLzE=";
+          url = "https://github.com/HuyTheKiller/SilkTouch/releases/download/1.2.5b/SilkTouch.zip";
+          hash = "sha256-S49bAKXGncgXKi8ykMlEjGayKbTz+odzmdb9OYBY9WE=";
         };
         "Balatro/Mods/NextAntePreview".source = pkgs.fetchFromGitHub {
           owner = "DigitalDetective47";

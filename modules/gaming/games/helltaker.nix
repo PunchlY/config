@@ -16,8 +16,7 @@
     };
 
     config = lib.mkIf cfg.enable {
-      programs.steam.config.apps.Helltaker = {
-        id = 1289310;
+      programs.steam.config.apps."1289310" = {
         files.game.place = {
           "local".source = "${helltaker-chinese}/local";
           "localHM".source = "${helltaker-chinese}/localHM";

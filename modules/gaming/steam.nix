@@ -1,10 +1,5 @@
 {inputs, ...}: {
   flake-file.inputs = {
-    jovian = {
-      url = "github:Jovian-Experiments/Jovian-NixOS";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     steam-config-nix = {
       url = "github:different-name/steam-config-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,8 +9,6 @@
   nixpkgs.config = {
     allowUnfreePackages = [
       "steam"
-      "steamdeck-hw-theme"
-      "steam-jupiter-unwrapped"
     ];
   };
 
@@ -24,24 +17,13 @@
     lib,
     ...
   }: {
-    imports = [inputs.jovian.nixosModules.default];
-
-    config = lib.mkIf config.jovian.steam.enable {
-      jovian.steam = {
-        user = config.user.name;
-        environment.PROTON_USE_RAW_INPUT = "1";
-      };
-
-      hm.imports = [
-        inputs.self.modules.homeManager.gaming
-      ];
-
+    config = lib.mkIf config.programs.steam.enable {
       hm.programs.steam.config.enable = true;
 
-      hm.xdg.desktopEntries.switch-to-game-mode = {
-        name = "Game Mode";
-        genericName = "Game Mode";
-        exec = "steamosctl switch-to-game-mode";
+      hm.xdg.dataFile = {
+        "Steam/config/htmlcache/External Extensions/kdbmhfkmnlmbkgbabkdealhhbfhlmmon.json".text = builtins.toJSON {
+          external_update_url = "https://clients2.google.com/service/update2/crx";
+        };
       };
     };
   };

@@ -41,42 +41,47 @@
           ln -s "$(fc-match "$FAMILY_NAME" --format %{file})" "$out"
         '';
 
-      fonts.fontconfig.defaultFonts =
-        lib.genAttrs
-        [
-          "monospace"
-          "serif"
-          "sansSerif"
-        ]
-        (_family: [
-          cfg.font.name
-          "Noto Sans Mono CJK SC"
-          "Noto Sans Mono"
-          "Noto Color Emoji"
-          "Noto Emoji"
-        ])
-        // {
-          emoji = [
+      fonts.fontconfig = lib.mkIf config.fonts.fontconfig.enable {
+        defaultFonts =
+          lib.genAttrs
+          [
+            "monospace"
+            "serif"
+            "sansSerif"
+          ]
+          (_family: [
+            cfg.font.name
+            "Noto Sans Mono CJK SC"
+            "Noto Sans Mono"
             "Noto Color Emoji"
             "Noto Emoji"
-          ];
-        };
+          ])
+          // {
+            emoji = [
+              "Noto Color Emoji"
+              "Noto Emoji"
+            ];
+          };
+      };
     };
   };
 
-  flake.modules.nixos.theme = {
+  flake.modules.nixos.theme = {config, ...}: {
+    fonts.packages = [config.theme.font.package];
+  };
+
+  flake.modules.nixos.base = {
     config,
     pkgs,
+    lib,
     ...
-  }: let
-    cfg = config.theme;
-  in {
+  }: {
     fonts = {
       enableDefaultPackages = false;
+      fontDir.enable = true;
       packages = with pkgs; [
-        cfg.font.package
-
         noto-fonts-cjk-sans
+        noto-fonts-cjk-serif
         noto-fonts
         noto-fonts-color-emoji
         noto-fonts-monochrome-emoji
@@ -84,26 +89,37 @@
         material-icons
         lmmath
       ];
+      fontconfig = {
+        enable = true;
+        defaultFonts = {
+          monospace = lib.mkDefault [
+            "Noto Sans Mono CJK SC"
+            "Noto Sans Mono"
+            "Noto Color Emoji"
+            "Noto Emoji"
+          ];
+          serif = lib.mkDefault [
+            "Noto Serif CJK SC"
+            "Noto Serif"
+            "Noto Color Emoji"
+            "Noto Emoji"
+          ];
+          sansSerif = lib.mkDefault [
+            "Noto Sans CJK SC"
+            "Noto Sans"
+            "Noto Color Emoji"
+            "Noto Emoji"
+          ];
+          emoji = lib.mkDefault [
+            "Noto Color Emoji"
+            "Noto Emoji"
+          ];
+        };
+      };
     };
-  };
 
-  flake.modules.homeManager.theme = {
-    config,
-    pkgs,
-    ...
-  }: let
-    cfg = config.theme;
-  in {
-    home.packages = with pkgs; [
-      cfg.font.package
+    hm.fonts.fontconfig.enable = false;
 
-      noto-fonts-cjk-sans
-      noto-fonts
-      noto-fonts-color-emoji
-      noto-fonts-monochrome-emoji
-
-      material-icons
-      lmmath
-    ];
+    hm.xdg.dataFile."fonts".source = config.hm.lib.file.mkOutOfStoreSymlink "/run/current-system/sw/share/X11/fonts";
   };
 }

@@ -23,8 +23,6 @@
     packages = config.overlayAttrs;
 
     overlayAttrs = {
-      balatro = final.callPackage ./balatro/package.nix {};
-
       browndust2 = final.callPackage ./browndust2.nix {};
 
       bun-latest =
@@ -32,13 +30,6 @@
         |> lib.sort (a: b: lib.compareVersions a b < 0)
         |> lib.last
         |> lib.flip lib.getAttr inputs'.bun.packages;
-      # bun-latest = lib.pipe inputs'.bun.packages [
-      #   lib.attrNames
-      #   (lib.sort (a: b: lib.compareVersions a b < 0))
-      #   lib.last
-      #   lib.getAttr
-      # ]
-      # inputs'.bun.packages;
 
       bun-types = final.callPackage ./bun-types/package.nix {};
 
