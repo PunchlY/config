@@ -20,7 +20,7 @@
 
     config = lib.mkIf cfg.enable {
       programs.steam.config.nonSteamApps."Plants vs. Zombies: RH" = {
-        target = "${pkgs.pvz-rh}/PlantsVsZombiesRH.exe";
+        target = "${cfg.package}/PlantsVsZombiesRH.exe";
         compatTool = "proton_experimental";
       };
     };
