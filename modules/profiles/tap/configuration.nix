@@ -10,6 +10,7 @@
       katawa-shoujo-re-engineered.enable = true;
       pvz-rh.enable = true;
       shattered-pixel-dungeon.enable = true;
+      zzz.enable = true;
     };
   };
 
