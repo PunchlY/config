@@ -2,18 +2,57 @@
 set -euo pipefail
 
 if @git@/bin/git diff --cached --quiet; then
-  echo 'No staged changes to commit.'
+  echo "No staged changes to commit."
   exit 0
 fi
 
-prompt="$(
-  echo '$ git diff --cached'
-  @git@/bin/git diff --cached --no-ext-diff
+IFS= read -r -d '' prompt <<EOF || :
+You are an expert software engineer generating a Git commit message. 
 
-  echo '$ git log --oneline -5'
-  @git@/bin/git log --oneline -5
+## Context: Staged Changes
+\`\`\`diff
+$(@git@/bin/git diff --cached --no-ext-diff)
+\`\`\`
 
-  echo 'Generate a commit message from the staged changes and recent commit style, then commit only the currently staged content. Do not modify files, stage additional changes, amend, or push.'
-)"
+## Context: Recent Commits
+\`\`\`
+$(@git@/bin/git log --oneline -5)
+\`\`\`
 
-@opencode@/bin/opencode run "$prompt"
+## CRITICAL RULE: Commit Message Format
+You MUST strictly output the commit message matching the EXACT format below:
+<type>(<scope>): <subject>
+
+1. <type> MUST be one of: feat, fix, refactor, perf, docs, test, build, ci, chore, style, revert.
+2. (<scope>) is optional. Only use it if a specific module/component is modified.
+3. <subject> MUST be in imperative mood, lowercase, no trailing period, max 72 chars.
+
+Example Valid Output:
+feat(auth): implement JWT token validation
+
+Example Invalid Output (DO NOT DO THIS):
+- Added JWT token validation (Wrong mood, capitalized, missing type)
+- Here is your commit: feat: add JWT (Contains conversational text)
+
+## Output Constraints
+- OUTPUT ONLY the raw commit message text.
+- NO markdown formatting.
+- NO code blocks (\`\`\`).
+- NO conversational text.
+EOF
+
+COMMIT_MSG="$(@opencode@/bin/opencode run --agent plan "$prompt")"
+
+if [ -z "${COMMIT_MSG}" ]; then
+  echo "Generated commit message is empty."
+  exit 1
+fi
+
+EDITED_MSG="$(@gum@/bin/gum write --width "${COLUMNS:-0}" <<<"$COMMIT_MSG")"
+
+if [ -z "$EDITED_MSG" ]; then
+  echo "Commit message is empty."
+  exit 1
+fi
+
+@git@/bin/git commit -F - <<<"$EDITED_MSG"
