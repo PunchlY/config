@@ -35,7 +35,6 @@
 
   flake.modules.homeManager.theme = {
     config,
-    pkgs,
     lib,
     ...
   }: let
