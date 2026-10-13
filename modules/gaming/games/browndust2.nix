@@ -19,24 +19,24 @@
 
         artwork = {
           cover = pkgs.fetchurl {
-            url = "https://cdn2.steamgriddb.com/grid/710474d4f5b8c047af09ffa1f4cfd352.png";
-            hash = "sha256-2DuOD9u5xEJbcjd81f3V0zcNHvR8zzVvb7YxwnRrooI=";
+            url = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3938980/e30a2f1d74cca33ed95170799b1328c4273a7ed2/library_capsule_schinese_2x.jpg";
+            hash = "sha256-KH306zfG1YEnOvZNVDKH+rMcSv/2gj3JwB1Sv4MLyXk=";
           };
           header = pkgs.fetchurl {
-            url = "https://cdn2.steamgriddb.com/grid/a997f6e1434bd6dd7c772df03eba6b8e.png";
-            hash = "sha256-9czxwEDKhLmzXzofRj3aMggsSPMwHduJozFlL1PvxdM=";
+            url = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3938980/67f58b63e349212f74cce1be6c84ea6889fb24ae/library_header_schinese_2x.jpg";
+            hash = "sha256-2dY8uPyq0A4U5Mvedfu5mMfhMJ8C5mtwQIGyCG61r2g=";
           };
           hero = pkgs.fetchurl {
-            url = "https://cdn2.steamgriddb.com/hero/24529cc88c135c55c5e3582ad8026185.png";
-            hash = "sha256-QHyYMv1/plwIGyM2i8KgRecOyvITFCfsekLBD/qDCj8=";
+            url = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3938980/b4bc88b73ec406c6d07aab8611af916a172d62c3/library_hero_2x.jpg";
+            hash = "sha256-pxJZU0g2PhiqR25wY0SsaHw0ZY5S23uy6qIzeaQfM68=";
           };
           icon = pkgs.fetchurl {
-            url = "https://cdn2.steamgriddb.com/icon/e45a7c5931ad7229fd89e9fe455f599f.ico";
-            hash = "sha256-cq7Ktz0XYgvQGWctybif82GHWurH5zIShVNqAwfLAz0=";
+            url = "https://shared.fastly.steamstatic.com/community_assets/images/apps/3938980/a1f517a764339570b77e4a22dabc179fd7549db3.jpg";
+            hash = "sha256-pr2/0AglIrJaDXlTE4nvsVKdjw/+u9mllqIjmreOaRE=";
           };
           logo = pkgs.fetchurl {
-            url = "https://cdn2.steamgriddb.com/logo/cb10f554d73e40f723febf42a006a887.png";
-            hash = "sha256-eXX9DbAEzagSYlSSXHICru23upCVzAhIN6BD2nDToqY=";
+            url = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3938980/8651a1ea029d1c6e8220476aac904e6d457b90ba/logo_schinese_2x.png";
+            hash = "sha256-YY3NiXGUOLymLWjbALr04Gv8+3nkaEF7Pu2+kcP2GgI=";
           };
         };
       };
