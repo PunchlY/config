@@ -48,7 +48,6 @@
             inputs.self.modules.nixos.base
             {
               networking.hostName = cfg.hostName;
-              system.stateVersion = "26.05";
             }
           ]
           ++ lib.optionals cfg.theme.enable [
