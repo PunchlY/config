@@ -62,7 +62,14 @@
           ]
           ++ lib.optionals cfg.gaming.enable [
             inputs.self.modules.nixos.gaming
-            {hm.games = cfg.gaming.games;}
+            {
+              jovian.steam = {
+                enable = true;
+                autoStart = true;
+                desktopSession = lib.mkDefault "gamescope-wayland";
+              };
+              hm.games = cfg.gaming.games;
+            }
           ];
       });
 }

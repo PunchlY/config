@@ -117,10 +117,6 @@
 
     virtualisation.waydroid.enable = true;
 
-    jovian.steam = {
-      enable = true;
-      autoStart = true;
-    };
     jovian.hardware.has.amd.gpu = true;
 
     programs.niri.enable = true;
