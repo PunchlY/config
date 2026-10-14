@@ -71,8 +71,6 @@
 
       home-assistant-haier = final.home-assistant.python3Packages.callPackage ./home-assistant/haier.nix {};
 
-      home-assistant-haismart-local = final.home-assistant.python3Packages.callPackage ./home-assistant/haismart-local.nix {};
-
       home-assistant-midea-auto-cloud = final.home-assistant.python3Packages.callPackage ./home-assistant/midea-auto-cloud.nix {};
 
       pvz-rh = final.callPackage ./pvz-rh.nix {};

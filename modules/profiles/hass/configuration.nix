@@ -52,7 +52,6 @@
         home-assistant-custom-components.xiaomi_home
         home-assistant-grid-south
         home-assistant-haier
-        home-assistant-haismart-local
         home-assistant-midea-auto-cloud
       ];
 
