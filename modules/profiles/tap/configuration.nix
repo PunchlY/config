@@ -38,8 +38,6 @@
 
     security.polkit.enable = true;
 
-    services.waydroid-nvidia.enable = true;
-
     services.udev.extraRules = ''
       ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
     '';
