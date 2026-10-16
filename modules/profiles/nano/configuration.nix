@@ -251,7 +251,8 @@
 
       nur.repos.moraxyc.man-pages-zh
 
-      (gtk-nocsd.wrapper pwvucontrol)
+      # (gtk-nocsd.wrapper pwvucontrol)
+      wiremix
       (gtk-nocsd.wrapper crosspipe)
       kazumi
 
