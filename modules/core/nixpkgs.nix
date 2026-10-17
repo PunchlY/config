@@ -52,6 +52,7 @@
 
     nixpkgs.overlays = [
       inputs.nur.overlays.default
+      inputs.chaotic.overlays.cache-friendly
       inputs.self.overlays.default
     ];
 
@@ -60,9 +61,7 @@
         inputs.chaotic.nixosModules.default
       ];
       nixpkgs = config.nixpkgs;
-      chaotic.nyx.overlay = {
-        flakeNixpkgs.config = config.nixpkgs.config;
-      };
+      chaotic.nyx.overlay.enable = false;
     };
 
     flake.modules.nixvim.base = {
