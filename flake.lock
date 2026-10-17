@@ -703,7 +703,6 @@
         "oktheme": "oktheme",
         "sops-nix": "sops-nix",
         "steam-config-nix": "steam-config-nix",
-        "stevenblack-blocklist": "stevenblack-blocklist",
         "tldr-pages": "tldr-pages",
         "treefmt-nix": "treefmt-nix_4",
         "waydroid-nvidia-nix": "waydroid-nvidia-nix",
@@ -770,22 +769,6 @@
       "original": {
         "owner": "different-name",
         "repo": "steam-config-nix",
-        "type": "github"
-      }
-    },
-    "stevenblack-blocklist": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1792029007,
-        "narHash": "sha256-Y02CG5QgSMN8fHLc48LjnsKT1V8c281pEQpNeKd2n70=",
-        "owner": "StevenBlack",
-        "repo": "hosts",
-        "rev": "82f0b5086df733a5591fc3f3b44d4990d0c54e97",
-        "type": "github"
-      },
-      "original": {
-        "owner": "StevenBlack",
-        "repo": "hosts",
         "type": "github"
       }
     },

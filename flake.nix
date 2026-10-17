@@ -80,10 +80,6 @@
       url = "github:different-name/steam-config-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    stevenblack-blocklist = {
-      url = "github:StevenBlack/hosts";
-      flake = false;
-    };
     tldr-pages = {
       url = "github:tldr-pages/tldr";
       flake = false;
