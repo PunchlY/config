@@ -15,7 +15,8 @@
   };
 
   configurations.nixos.tap.module = {pkgs, ...}: {
-    boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-x86_64-v3;
+    boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    hardware.nvidia.package = pkgs.nvidia_cachyos;
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;

@@ -33,6 +33,7 @@
         url = "github:nix-community/NUR";
         inputs.nixpkgs.follows = "nixpkgs";
       };
+      chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     };
 
     flake-file.nixConfig = {
@@ -40,10 +41,12 @@
         "https://mirrors.ustc.edu.cn/nix-channels/store"
         "https://nix-community.cachix.org"
         "https://cache.nixos.org"
+        "https://nyx-cache.chaotic.cx/"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "nyx-cache.chaotic.cx:dJxTrgMC3V3cFfyIiBQDQorG6k1LsqurH/srpMSq7qk="
       ];
     };
 
@@ -53,7 +56,13 @@
     ];
 
     flake.modules.nixos.base = {
+      imports = [
+        inputs.chaotic.nixosModules.default
+      ];
       nixpkgs = config.nixpkgs;
+      chaotic.nyx.overlay = {
+        flakeNixpkgs.config = config.nixpkgs.config;
+      };
     };
 
     flake.modules.nixvim.base = {
