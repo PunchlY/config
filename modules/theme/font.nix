@@ -11,7 +11,12 @@
       font = {
         package = lib.mkOption {
           type = lib.types.package;
-          default = pkgs.maple-mono.Normal-NF-CN;
+          default = pkgs.maple-mono.Normal-NF-CN.overrideAttrs {
+            src = pkgs.fetchurl {
+              url = "https://github.com/PunchlY/maple-font/releases/download/v1792265751/MapleMonoNormal-NF-CN.zip";
+              hash = "sha256-6ikrgazSDSAssj+uBdmI8caC9tGwZL5yfZx3iC2XAOw=";
+            };
+          };
         };
         name = lib.mkOption {
           type = lib.types.str;
