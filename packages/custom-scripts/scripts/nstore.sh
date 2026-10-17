@@ -1,7 +1,7 @@
 #! @runtimeShell@
 set -euo pipefail
 
-(($# == 0)) && exit 1
+((! $#)) && exit 1
 
 url="$(@python314@/bin/python -c 'from pathlib import Path; import sys; print(Path(sys.argv[1]).resolve().as_uri())' "$1")"
 

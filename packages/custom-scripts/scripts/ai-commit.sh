@@ -1,6 +1,23 @@
 #! @runtimeShell@
 set -euo pipefail
 
+print_prompt=0
+
+while (($#)); do
+  case "$1" in
+  --print-prompt)
+    print_prompt=1
+    shift
+    ;;
+  -*)
+    shift
+    ;;
+  *)
+    break
+    ;;
+  esac
+done
+
 if @git@/bin/git diff --cached --quiet; then
   echo "No staged changes to commit."
   exit 0
@@ -40,6 +57,11 @@ Example Invalid Output (DO NOT DO THIS):
 - NO code blocks (\`\`\`).
 - NO conversational text.
 EOF
+
+if [ "$print_prompt" = "1" ]; then
+  echo "$prompt"
+  exit 0
+fi
 
 COMMIT_MSG="$(@opencode@/bin/opencode run --agent plan "$prompt")"
 

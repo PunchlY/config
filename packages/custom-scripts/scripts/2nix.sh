@@ -6,7 +6,7 @@ attr=
 args=$(@getopt@/bin/getopt -o A: -l attr: -- "$@") || exit 2
 eval "set -- $args"
 
-while [[ $# -gt 0 ]]; do
+while (($#)); do
   case "$1" in
   -A | --attr)
     attr=$2
