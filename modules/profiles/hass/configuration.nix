@@ -23,6 +23,12 @@
 
     hardware.bluetooth.enable = true;
 
+    networking.firewall = {
+      allowedTCPPorts = [
+        8123
+      ];
+    };
+
     sops.secrets.hass = {
       owner = "hass";
       path = "/var/lib/hass/secrets.yaml";
@@ -42,7 +48,6 @@
 
     services.home-assistant = {
       enable = true;
-      openFirewall = true;
       customComponents = with pkgs; [
         home-assistant-custom-components.xiaomi_home
         home-assistant-grid-south
