@@ -1,9 +1,10 @@
 {inputs, ...}: {
   flake-file.inputs = {
-    jovian = {
-      url = "github:Jovian-Experiments/Jovian-NixOS";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # use chaotic.vendored.jovian
+    # jovian = {
+    #   url = "github:Jovian-Experiments/Jovian-NixOS";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
   nixpkgs.config = {
@@ -18,7 +19,7 @@
     lib,
     ...
   }: {
-    imports = [inputs.jovian.nixosModules.default];
+    imports = [inputs.chaotic.vendored.jovian.nixosModules.default];
 
     config = lib.mkIf config.jovian.steam.enable {
       jovian.steam = {
