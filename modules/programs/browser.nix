@@ -48,6 +48,10 @@
           };
           # Firenvim
           "egpjdkipkomnmjhjmdamaniclmdlobbo" = {};
+          # Get cookies.txt LOCALLY
+          cclelndahbckbenkjhflpdbgdldlbecc = {
+            toolbar_pin = "force_pinned";
+          };
         };
         extraOpts = {
           RestoreOnStartup = 1;
