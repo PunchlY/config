@@ -1,13 +1,4 @@
 {
-  nixpkgs.config = {
-    allowUnfreePackages = [
-      "katawa-shoujo-re-engineered"
-    ];
-    permittedInsecurePackages = [
-      "python3.12-ecdsa-0.19.1"
-    ];
-  };
-
   flake.modules.homeManager.gaming = {
     config,
     pkgs,

@@ -1,10 +1,4 @@
 {
-  nixpkgs.config = {
-    allowUnfreePackages = [
-      "celeste64"
-    ];
-  };
-
   flake.modules.homeManager.gaming = {
     config,
     pkgs,

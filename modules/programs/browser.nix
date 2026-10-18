@@ -1,10 +1,4 @@
 {
-  nixpkgs.config = {
-    allowUnfreePackages = [
-      "google-chrome"
-    ];
-  };
-
   flake.modules.nixos.base = {
     config,
     pkgs,

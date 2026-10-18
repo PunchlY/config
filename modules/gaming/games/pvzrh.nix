@@ -1,10 +1,4 @@
 {
-  nixpkgs.config = {
-    allowUnfreePackages = [
-      "PlantsVsZombiesRH.zip"
-    ];
-  };
-
   flake.modules.homeManager.gaming = {
     config,
     pkgs,

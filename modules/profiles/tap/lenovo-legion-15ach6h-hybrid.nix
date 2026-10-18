@@ -1,11 +1,4 @@
 {inputs, ...}: {
-  nixpkgs.config = {
-    allowUnfreePackages = [
-      "nvidia-x11"
-      "nvidia-settings"
-    ];
-  };
-
   configurations.nixos.tap.module = {
     imports = [
       inputs.nixos-hardware.nixosModules.lenovo-legion-15ach6h-hybrid

@@ -1,10 +1,4 @@
-{self, ...}: {
-  nixpkgs.config = {
-    allowUnfreePackages = [
-      "XiaoMi/xiaomi_home"
-    ];
-  };
-
+{inputs, ...}: {
   configurations.nixos.hass.module = {
     config,
     pkgs,
@@ -34,7 +28,7 @@
       path = "/var/lib/hass/secrets.yaml";
 
       format = "yaml";
-      sopsFile = "${self}/secrets/hass.yaml";
+      sopsFile = "${inputs.self}/secrets/hass.yaml";
       key = "";
 
       restartUnits = ["home-assistant.service"];

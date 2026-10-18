@@ -1,10 +1,4 @@
 {
-  nixpkgs.config = {
-    allowUnfreePackages = [
-      "aseprite"
-    ];
-  };
-
   flake.modules.homeManager.base = {
     config,
     pkgs,

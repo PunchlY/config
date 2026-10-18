@@ -6,12 +6,6 @@
     };
   };
 
-  nixpkgs.config = {
-    allowUnfreePackages = [
-      "steam"
-    ];
-  };
-
   flake.modules.nixos.gaming = {
     config,
     lib,

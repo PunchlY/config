@@ -10,16 +10,6 @@
   ];
 
   options.nixpkgs = {
-    config = {
-      allowUnfreePackages = lib.mkOption {
-        type = lib.types.listOf lib.types.singleLineStr;
-        default = [];
-      };
-      permittedInsecurePackages = lib.mkOption {
-        type = lib.types.listOf lib.types.singleLineStr;
-        default = [];
-      };
-    };
     overlays = lib.mkOption {
       type = lib.types.listOf lib.types.unspecified;
       default = [];
@@ -52,7 +42,10 @@
 
     nixpkgs.overlays = [
       inputs.nur.overlays.default
-      inputs.chaotic.overlays.cache-friendly
+      (import "${inputs.chaotic}/overlays/cache-friendly.nix" {
+        flakes = inputs.chaotic.vendored // inputs.chaotic.inputs // {self = inputs.chaotic;};
+        nixpkgsConfig.allowUnfree = true;
+      })
       inputs.self.overlays.default
     ];
 
@@ -60,12 +53,14 @@
       imports = [
         inputs.chaotic.nixosModules.default
       ];
-      nixpkgs = config.nixpkgs;
+      nixpkgs.config.allowUnfree = true;
+      nixpkgs.overlays = config.nixpkgs.overlays;
       chaotic.nyx.overlay.enable = false;
     };
 
     flake.modules.nixvim.base = {
-      nixpkgs = config.nixpkgs;
+      nixpkgs.config.allowUnfree = true;
+      nixpkgs.overlays = config.nixpkgs.overlays;
     };
 
     perSystem = {
@@ -75,7 +70,7 @@
     }: {
       _module.args.pkgs = import inputs.nixpkgs {
         inherit system;
-        inherit (config.nixpkgs) config;
+        config.allowUnfree = true;
       };
       _module.args.final = pkgs.appendOverlays config.nixpkgs.overlays;
     };

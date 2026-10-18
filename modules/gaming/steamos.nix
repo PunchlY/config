@@ -7,13 +7,6 @@
     # };
   };
 
-  nixpkgs.config = {
-    allowUnfreePackages = [
-      "steamdeck-hw-theme"
-      "steam-jupiter-unwrapped"
-    ];
-  };
-
   flake.modules.nixos.gaming = {
     config,
     lib,
