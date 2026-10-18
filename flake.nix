@@ -68,6 +68,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     oktheme.url = "github:PunchlY/oktheme";
+    piri = {
+      url = "github:Asthestarsfalll/piri";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
