@@ -15,6 +15,11 @@
         "nix.serverSettings".nil = {
           formatting.command = [(lib.getExe pkgs.alejandra)];
         };
+        "nix.hiddenLanguageServerErrors" = [
+          "textDocument/definition"
+          "textDocument/documentSymbol"
+          "textDocument/formatting"
+        ];
       };
       userSettings."[nix]" = {
         "editor.defaultFormatter" = "jnoortheen.nix-ide";
