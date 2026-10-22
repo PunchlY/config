@@ -20,8 +20,6 @@
         environment.PROTON_USE_RAW_INPUT = "1";
       };
 
-      jovian.decky-loader.enable = true;
-
       hm.xdg.desktopEntries.switch-to-game-mode = {
         name = "Game Mode";
         genericName = "Game Mode";
