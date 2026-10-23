@@ -193,7 +193,7 @@
 
     hm.programs.impala.enable = true;
 
-    hm.programs.bluetui.enable = true;
+    hm.programs.bluetuith.enable = true;
 
     hm.programs.tray-tui.enable = true;
 
@@ -209,11 +209,7 @@
       exec = "libinput debug-gui";
     };
 
-    hm.xdg.desktopEntries.bulletty = {
-      name = "bulletty";
-      exec = "bulletty";
-      terminal = true;
-    };
+    programs.appimage.enable = true;
 
     hm.home.packages = with pkgs; [
       custom-scripts
@@ -229,10 +225,10 @@
       wireplumber
       exiftool
       android-tools
-      appimage-run
       xdg-user-dirs
       screen
       lazygit
+      gdu
 
       terminal-toys
       terminal-colors
@@ -245,8 +241,7 @@
       # An ncurses spreadsheet program for terminal
       sc-im
 
-      # terminal calculator
-      quich
+      pari
 
       nur.repos.moraxyc.man-pages-zh
 
