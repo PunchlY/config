@@ -31,7 +31,8 @@
     inherit (config.theme) font;
   in {
     config = lib.mkIf cfg.enable {
-      xdg.configFile."wiliwili/font.ttf".source = font.path;
+      xdg.configFile."wiliwili/font.ttf".source = font.fonts.sansSerif.path;
+      xdg.configFile."wiliwili/emoji.ttf".source = font.fonts.emoji.path;
     };
   };
 

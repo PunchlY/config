@@ -20,6 +20,7 @@
       } ''
         read -r source < <(
           magick "$wallpaper" \
+            -alpha off \
             -seed 0 \
             -resize '256>' \
             -colorspace oklch \

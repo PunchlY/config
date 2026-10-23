@@ -5,7 +5,11 @@
   ...
 }: {
   options.configurations.nixos = lib.mkOption {
-    type = lib.types.lazyAttrsOf (lib.types.submodule ({name, ...}: {
+    type = lib.types.lazyAttrsOf (lib.types.submodule ({
+      name,
+      config,
+      ...
+    }: {
       options = {
         hostName = lib.mkOption {
           type = lib.types.str;
@@ -21,7 +25,7 @@
         theme = {
           enable = lib.mkEnableOption "theme";
           wallpaper = lib.mkOption {
-            type = lib.types.unspecified;
+            type = lib.types.nullOr lib.types.unspecified;
           };
         };
         gaming = {
@@ -34,6 +38,9 @@
             }));
           };
         };
+      };
+      config = {
+        theme.enable = lib.mkIf config.gaming.enable true;
       };
     }));
   };
@@ -52,13 +59,13 @@
           ]
           ++ lib.optionals cfg.theme.enable [
             inputs.self.modules.nixos.theme
-            ({pkgs, ...}: {
-              theme.wallpaper =
-                if lib.isFunction cfg.theme.wallpaper
-                then pkgs.callPackage cfg.theme.wallpaper {}
-                else cfg.theme.wallpaper;
-            })
           ]
+          ++ lib.optional (cfg.theme.enable && cfg.theme.wallpaper != null) ({pkgs, ...}: {
+            theme.wallpaper =
+              if lib.isFunction cfg.theme.wallpaper
+              then pkgs.callPackage cfg.theme.wallpaper {}
+              else cfg.theme.wallpaper;
+          })
           ++ lib.optionals cfg.gaming.enable [
             inputs.self.modules.nixos.gaming
             {

@@ -7,18 +7,24 @@
     imports = [inputs.self.modules.generic.theme];
     hm.imports =
       [inputs.self.modules.homeManager.theme]
-      ++ map (path: lib.getAttrFromPath path config |> lib.mkDefault |> lib.setAttrByPath path) [
-        ["theme" "wallpaper"]
-        ["theme" "opacity"]
+      ++ map (path: lib.getAttrFromPath path config |> lib.mkDefault |> lib.setAttrByPath path) (
+        [
+          ["theme" "wallpaper"]
+          ["theme" "opacity"]
 
-        ["theme" "cursor" "name"]
-        ["theme" "cursor" "package"]
-        ["theme" "cursor" "size"]
+          ["theme" "cursor" "name"]
+          ["theme" "cursor" "package"]
+          ["theme" "cursor" "size"]
 
-        ["theme" "font" "name"]
-        ["theme" "font" "package"]
-        ["theme" "font" "size"]
-      ];
+          ["theme" "font" "size"]
+        ]
+        ++ lib.concatMap
+        (name: [
+          ["theme" "font" "fonts" name "name"]
+          ["theme" "font" "fonts" name "package"]
+        ])
+        (lib.attrNames config.theme.font.fonts)
+      );
   };
 
   flake.modules.homeManager.theme = {

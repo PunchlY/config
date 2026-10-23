@@ -27,7 +27,7 @@
   in {
     config = lib.mkIf config.boot.plymouth.enable {
       boot.plymouth = {
-        font = font.path;
+        font = font.fonts.monospace.path;
       };
     };
   };
