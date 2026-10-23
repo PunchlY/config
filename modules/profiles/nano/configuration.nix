@@ -24,7 +24,6 @@
       celeste64.enable = true;
       helltaker.enable = true;
       katawa-shoujo-re-engineered.enable = true;
-      pvz-rh.enable = true;
       shattered-pixel-dungeon.enable = true;
     };
   };
@@ -151,7 +150,7 @@
         obs-backgroundremoval
         obs-pipewire-audio-capture
       ];
-      enableVirtualCamera = true;
+      # enableVirtualCamera = true;
     };
 
     hm.programs.wiliwili.enable = true;

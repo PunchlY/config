@@ -73,8 +73,6 @@
 
       home-assistant-midea-auto-cloud = final.home-assistant.python3Packages.callPackage ./home-assistant/midea-auto-cloud.nix {};
 
-      pvz-rh = final.callPackage ./pvz-rh.nix {};
-
       pywincontrols = final.python3Packages.callPackage ./pywincontrols.nix {};
 
       the-powder-toy-chinese = final.callPackage ./the-powder-toy-chinese.nix {};
