@@ -157,8 +157,6 @@
 
     hm.programs.mpv.enable = true;
 
-    hm.programs.kew.enable = true;
-
     hm.programs.opencode.enable = true;
 
     hm.programs.fastfetch.enable = true;
@@ -196,8 +194,6 @@
     hm.programs.bluetuith.enable = true;
 
     hm.programs.tray-tui.enable = true;
-
-    hm.programs.aseprite.enable = true;
 
     hm.xdg.desktopEntries.webcam = {
       name = "webcam";
@@ -257,6 +253,8 @@
       (gtk-nocsd.wrapper gnome-mines)
 
       (libinput.override {eventGUISupport = true;})
+
+      aseprite
     ];
   };
 }
