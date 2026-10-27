@@ -89,24 +89,24 @@
         colors-dark =
           {
             alpha = opacity;
-            foreground = colors.on_surface.hex_stripped;
-            background = colors.surface.hex_stripped;
-            flash = colors.primary.hex_stripped;
+            foreground = colors.on_surface.hexStripped;
+            background = colors.surface.hexStripped;
+            flash = colors.primary.hexStripped;
           }
           // lib.listToAttrs (
             lib.genList (i: {
               name = "regular${toString i}";
-              value = colors."color${toString i}".hex_stripped;
+              value = colors."color${toString i}".hexStripped;
             })
             8
             ++ lib.genList (i: {
               name = "bright${toString i}";
-              value = colors."color${toString (i + 8)}".hex_stripped;
+              value = colors."color${toString (i + 8)}".hexStripped;
             })
             8
             ++ lib.genList (i: {
               name = toString i;
-              value = colors."color${toString i}".hex_stripped;
+              value = colors."color${toString i}".hexStripped;
             })
             256
           );

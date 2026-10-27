@@ -28,13 +28,13 @@
         themes.md3 = with colors; {
           palette = lib.genList (i: "${toString i}=${colors."color${toString i}".hex}") 256;
           palette-generate = true;
-          selection-background = primary.hex_stripped;
-          selection-foreground = on_primary.hex_stripped;
-          background = surface.hex_stripped;
-          foreground = on_surface.hex_stripped;
-          background-opacity = opacity.hex_stripped;
-          cursor-color = on_surface.hex_stripped;
-          cursor-text = surface.hex_stripped;
+          selection-background = primary.hexStripped;
+          selection-foreground = on_primary.hexStripped;
+          background = surface.hexStripped;
+          foreground = on_surface.hexStripped;
+          background-opacity = opacity.hexStripped;
+          cursor-color = on_surface.hexStripped;
+          cursor-text = surface.hexStripped;
           cursor-style = "block";
           minimum-contrast = 1.1;
         };

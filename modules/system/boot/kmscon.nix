@@ -5,39 +5,41 @@
     ...
   }: let
     inherit (config.theme) colors font;
-    rgbToKmscon = name: with colors.${name}.rgb; "${toString r},${toString g},${toString b}";
   in {
     config = lib.mkIf config.services.kmscon.enable {
-      services.kmscon.config = {
-        libseat = false;
-        term = "xterm-256color";
+      services.kmscon.config =
+        {
+          libseat = false;
+          term = "xterm-256color";
+          font-name = "monospace";
+          font-size = lib.mkDefault font.size;
+          palette = "custom";
+        }
+        // lib.mapAttrs' (name: color:
+          lib.map lib.toString [color.rgb.r color.rgb.g color.rgb.b]
+          |> lib.concatStringsSep ","
+          |> lib.nameValuePair "palette-${name}") {
+          black = colors.color0;
+          red = colors.color1;
+          green = colors.color2;
+          yellow = colors.color3;
+          blue = colors.color4;
+          magenta = colors.color5;
+          cyan = colors.color6;
+          light-grey = colors.color7;
 
-        font-name = "monospace";
-        font-size = lib.mkDefault font.size;
+          dark-grey = colors.color8;
+          light-red = colors.color9;
+          light-green = colors.color10;
+          light-yellow = colors.color11;
+          light-blue = colors.color12;
+          light-magenta = colors.color13;
+          light-cyan = colors.color14;
+          white = colors.color15;
 
-        palette = "custom";
-
-        palette-black = rgbToKmscon "color0";
-        palette-red = rgbToKmscon "color1";
-        palette-green = rgbToKmscon "color2";
-        palette-yellow = rgbToKmscon "color3";
-        palette-blue = rgbToKmscon "color4";
-        palette-magenta = rgbToKmscon "color5";
-        palette-cyan = rgbToKmscon "color6";
-        palette-light-grey = rgbToKmscon "color7";
-
-        palette-dark-grey = rgbToKmscon "color8";
-        palette-light-red = rgbToKmscon "color9";
-        palette-light-green = rgbToKmscon "color10";
-        palette-light-yellow = rgbToKmscon "color11";
-        palette-light-blue = rgbToKmscon "color12";
-        palette-light-magenta = rgbToKmscon "color13";
-        palette-light-cyan = rgbToKmscon "color14";
-        palette-white = rgbToKmscon "color15";
-
-        palette-foreground = rgbToKmscon "on_surface";
-        palette-background = rgbToKmscon "surface";
-      };
+          foreground = colors.on_surface;
+          background = colors.surface;
+        };
     };
   };
 }

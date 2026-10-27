@@ -8,7 +8,7 @@
   in {
     config = lib.mkIf config.console.enable {
       console = {
-        colors = lib.genList (i: colors."color${toString i}".hex_stripped) 16;
+        colors = lib.genList (i: colors."color${toString i}".hexStripped) 16;
       };
     };
   };

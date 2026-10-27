@@ -48,18 +48,18 @@
         -- Text layer
         swayimg.text.font = "monospace"
         swayimg.text.size = ${toString font.size}
-        swayimg.text.color = 0xff${on_surface.hex_stripped}
+        swayimg.text.color = 0xff${on_surface.hexStripped}
         swayimg.text.shadow = 0x00000000
-        swayimg.text.background = 0x${opacity_hex}${surface.hex_stripped}
+        swayimg.text.background = 0x${opacity_hex}${surface.hexStripped}
 
         -- Viewer mode
-        swayimg.viewer.set_window_background(0x${opacity_hex}${surface.hex_stripped})
+        swayimg.viewer.set_window_background(0x${opacity_hex}${surface.hexStripped})
 
         -- Gallery mode
-        swayimg.gallery.selected_color = 0xff${surface_bright.hex_stripped}
-        swayimg.gallery.unselected_color = 0xff${surface_dim.hex_stripped}
-        swayimg.gallery.border_color = 0xff${primary.hex_stripped}
-        swayimg.gallery.window_color = 0x${opacity_hex}${surface.hex_stripped}
+        swayimg.gallery.selected_color = 0xff${surface_bright.hexStripped}
+        swayimg.gallery.unselected_color = 0xff${surface_dim.hexStripped}
+        swayimg.gallery.border_color = 0xff${primary.hexStripped}
+        swayimg.gallery.window_color = 0x${opacity_hex}${surface.hexStripped}
       '';
     };
   };

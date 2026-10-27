@@ -147,12 +147,12 @@
         scriptOpts.uosc = {
           color = with colors;
             lib.concatMapAttrsStringSep "," (name: value: "${name}=${value}") {
-              foreground = on_surface.hex_stripped;
-              foreground_text = surface.hex_stripped;
-              background = surface.hex_stripped;
-              background_text = on_surface.hex_stripped;
-              success = green.hex_stripped;
-              error = error.hex_stripped;
+              foreground = on_surface.hexStripped;
+              foreground_text = surface.hexStripped;
+              background = surface.hexStripped;
+              background_text = on_surface.hexStripped;
+              success = green.hexStripped;
+              error = error.hexStripped;
             };
         };
       };
