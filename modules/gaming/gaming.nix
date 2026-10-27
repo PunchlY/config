@@ -1,9 +1,6 @@
 {inputs, ...}: {
   flake-file.inputs = {
-    aagl = {
-      url = "github:ezKEa/aagl-gtk-on-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    aagl.url = "github:ezKEa/aagl-gtk-on-nix";
   };
 
   flake-file.nixConfig = {
@@ -12,7 +9,10 @@
   };
 
   nixpkgs.overlays = [
-    inputs.aagl.overlays.default
+    (inputs.self.lib.mkOverlay {
+      flake = inputs.aagl;
+      config.allowUnfree = true;
+    })
   ];
 
   flake.modules.nixos.gaming = {

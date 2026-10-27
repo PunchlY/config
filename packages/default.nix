@@ -4,10 +4,6 @@
       url = "github:nix-community/bun2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    bun = {
-      url = "github:Daste745/nix-bun";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   nixpkgs.overlays = [inputs.bun2nix.overlays.default];
@@ -16,7 +12,6 @@
     config,
     final,
     pkgs,
-    inputs',
     lib,
     ...
   }: {
@@ -24,12 +19,6 @@
 
     overlayAttrs = {
       browndust2 = final.callPackage ./browndust2.nix {};
-
-      bun-latest =
-        lib.attrNames inputs'.bun.packages
-        |> lib.sort (a: b: lib.compareVersions a b < 0)
-        |> lib.last
-        |> lib.flip lib.getAttr inputs'.bun.packages;
 
       bun-types = final.callPackage ./bun-types/package.nix {};
 

@@ -28,37 +28,15 @@
     ];
   };
 
-  nixpkgs.overlays = let
-    mkOverlay = {
-      nixpkgs,
-      overlay,
-    }: _final: prev: let
-      inherit (prev) stdenv;
-    in
-      inputs.chaotic.utils.applyOverlay {
-        pkgs =
-          if stdenv.buildPlatform != stdenv.hostPlatform
-          then
-            import nixpkgs {
-              localSystem = stdenv.buildPlatform;
-              crossSystem = stdenv.hostPlatform;
-            }
-          else
-            import nixpkgs {
-              localSystem = nixpkgs.legacyPackages."${stdenv.hostPlatform.system}".stdenv.hostPlatform;
-            };
-        inherit overlay;
-      };
-  in [
+  nixpkgs.overlays = [
     inputs.self.overlays.default
     inputs.nur.overlays.default
     (import "${inputs.chaotic}/overlays/cache-friendly.nix" {
       flakes = inputs.chaotic.vendored // inputs.chaotic.inputs // {self = inputs.chaotic;};
       nixpkgsConfig.allowUnfree = true;
     })
-    (mkOverlay {
-      nixpkgs = inputs.ccicnce113424-nix-packages.inputs.nixpkgs;
-      overlay = inputs.ccicnce113424-nix-packages.overlays.default;
+    (inputs.self.lib.mkOverlay {
+      flake = inputs.ccicnce113424-nix-packages;
     })
   ];
 

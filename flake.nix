@@ -27,14 +27,7 @@
   };
 
   inputs = {
-    aagl = {
-      url = "github:ezKEa/aagl-gtk-on-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    bun = {
-      url = "github:Daste745/nix-bun";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    aagl.url = "github:ezKEa/aagl-gtk-on-nix";
     bun2nix = {
       url = "github:nix-community/bun2nix";
       inputs.nixpkgs.follows = "nixpkgs";
