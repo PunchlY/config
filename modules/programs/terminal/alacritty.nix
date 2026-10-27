@@ -89,31 +89,31 @@
           size = font.size;
         };
         window.opacity = opacity;
-        colors = with colors; {
+        colors = {
           primary = {
-            foreground = on_surface.hex;
-            background = surface.hex;
-            bright_foreground = on_surface.hex;
+            foreground = colors.on_surface.hex;
+            background = colors.surface.hex;
+            bright_foreground = colors.on_surface.hex;
           };
           normal = {
-            black = color0.hex;
-            red = color1.hex;
-            green = color2.hex;
-            yellow = color3.hex;
-            blue = color4.hex;
-            magenta = color5.hex;
-            cyan = color6.hex;
-            white = color7.hex;
+            black = colors.color0.hex;
+            red = colors.color1.hex;
+            green = colors.color2.hex;
+            yellow = colors.color3.hex;
+            blue = colors.color4.hex;
+            magenta = colors.color5.hex;
+            cyan = colors.color6.hex;
+            white = colors.color7.hex;
           };
           bright = {
-            black = color8.hex;
-            red = color9.hex;
-            green = color10.hex;
-            yellow = color11.hex;
-            blue = color12.hex;
-            magenta = color13.hex;
-            cyan = color14.hex;
-            white = color15.hex;
+            black = colors.color8.hex;
+            red = colors.color9.hex;
+            green = colors.color10.hex;
+            yellow = colors.color11.hex;
+            blue = colors.color12.hex;
+            magenta = colors.color13.hex;
+            cyan = colors.color14.hex;
+            white = colors.color15.hex;
           };
           indexed_colors =
             lib.genList (i: {

@@ -11,8 +11,8 @@
       xdg.mimeApps.defaultApplicationPackages = [cfg.package];
       programs.yazi = {
         shellWrapperName = "y";
-        extraPackages = with pkgs; [
-          hexyl
+        extraPackages = [
+          pkgs.hexyl
         ];
         plugins = {
           inherit

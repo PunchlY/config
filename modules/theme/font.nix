@@ -9,7 +9,7 @@
   in {
     options.theme.font = {
       size = lib.mkOption {
-        type = with lib.types; either ints.unsigned float;
+        type = lib.types.either lib.types.ints.unsigned lib.types.float;
         default = 14;
       };
       fonts = lib.mkOption {

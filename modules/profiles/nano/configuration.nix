@@ -145,11 +145,14 @@
 
     programs.obs-studio = {
       enable = true;
-      plugins = with pkgs.obs-studio-plugins; [
-        wlrobs
-        obs-backgroundremoval
-        obs-pipewire-audio-capture
-      ];
+      plugins = builtins.attrValues {
+        inherit
+          (pkgs.obs-studio-plugins)
+          wlrobs
+          obs-backgroundremoval
+          obs-pipewire-audio-capture
+          ;
+      };
       # enableVirtualCamera = true;
     };
 
@@ -207,54 +210,51 @@
 
     programs.appimage.enable = true;
 
-    hm.home.packages = with pkgs; [
-      custom-scripts
-      just
-      nix-output-monitor
-      nh
-      nurl
-      moreutils
-      wget
-      q
-      yq-go
-      tree
-      wireplumber
-      exiftool
-      android-tools
-      xdg-user-dirs
-      screen
-      lazygit
-      gdu
+    hm.home.packages = builtins.attrValues {
+      inherit
+        (pkgs)
+        custom-scripts
+        just
+        nix-output-monitor
+        nh
+        nurl
+        moreutils
+        wget
+        q
+        yq-go
+        tree
+        wireplumber
+        exiftool
+        android-tools
+        xdg-user-dirs
+        screen
+        lazygit
+        gdu
+        terminal-toys
+        terminal-colors
+        terminal-typeracer
+        era
+        # feed reader
+        bulletty
+        # An ncurses spreadsheet program for terminal
+        sc-im
+        pari
+        wiremix
+        kazumi
+        scrcpy
+        telegram-desktop
+        aseprite
+        ;
+      inherit
+        (pkgs.nur.repos.moraxyc)
+        man-pages-zh
+        ;
 
-      terminal-toys
-      terminal-colors
-      terminal-typeracer
-      era
+      crosspipe = pkgs.gtk-nocsd.wrapper pkgs.crosspipe;
 
-      # feed reader
-      bulletty
+      gnome-mines = pkgs.gtk-nocsd.wrapper pkgs.gnome-mines;
 
-      # An ncurses spreadsheet program for terminal
-      sc-im
-
-      pari
-
-      nur.repos.moraxyc.man-pages-zh
-
-      # (gtk-nocsd.wrapper pwvucontrol)
-      wiremix
-      (gtk-nocsd.wrapper crosspipe)
-      kazumi
-
-      scrcpy
-
-      telegram-desktop
-
-      (gtk-nocsd.wrapper gnome-mines)
-
-      (libinput.override {eventGUISupport = true;})
-
-      aseprite
-    ];
+      libinput = pkgs.libinput.override {eventGUISupport = true;};
+    };
   };
 }

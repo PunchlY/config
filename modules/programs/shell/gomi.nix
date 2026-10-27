@@ -43,30 +43,30 @@
   in {
     config = lib.mkIf cfg.enable {
       programs.gomi.settings = {
-        ui.style = with colors; {
+        ui.style = {
           list_view = {
-            cursor = magenta.hex;
-            selected = green.hex;
-            filter_match = orange.hex;
-            filter_prompt = blue.hex;
+            cursor = colors.magenta.hex;
+            selected = colors.green.hex;
+            filter_match = colors.orange.hex;
+            filter_prompt = colors.blue.hex;
           };
           detail_view = {
-            border = outline.hex;
+            border = colors.outline.hex;
             info_pane = {
-              deleted_from.fg = on_surface.hex;
-              deleted_from.bg = surface.hex;
-              deleted_at.fg = on_surface.hex;
-              deleted_at.bg = surface.hex;
+              deleted_from.fg = colors.on_surface.hex;
+              deleted_from.bg = colors.surface.hex;
+              deleted_at.fg = colors.on_surface.hex;
+              deleted_at.bg = colors.surface.hex;
             };
             preview_pane = {
-              border = outline_variant.hex;
-              size.fg = on_surface.hex;
-              size.bg = outline_variant.hex;
-              scroll.fg = on_surface.hex;
-              scroll.bg = outline_variant.hex;
+              border = colors.outline_variant.hex;
+              size.fg = colors.on_surface.hex;
+              size.bg = colors.outline_variant.hex;
+              scroll.fg = colors.on_surface.hex;
+              scroll.bg = colors.outline_variant.hex;
             };
           };
-          deletion_dialog = red.hex;
+          deletion_dialog = colors.red.hex;
         };
       };
     };

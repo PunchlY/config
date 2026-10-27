@@ -44,22 +44,22 @@
     opacity_hex = lib.fixedWidthString 2 "0" (lib.toHexString (lib.ceil (opacity * 255)));
   in {
     config = lib.mkIf cfg.enable {
-      programs.swayimg.initLua = with colors; ''
+      programs.swayimg.initLua = ''
         -- Text layer
         swayimg.text.font = "monospace"
         swayimg.text.size = ${toString font.size}
-        swayimg.text.color = 0xff${on_surface.hexStripped}
+        swayimg.text.color = 0xff${colors.on_surface.hexStripped}
         swayimg.text.shadow = 0x00000000
-        swayimg.text.background = 0x${opacity_hex}${surface.hexStripped}
+        swayimg.text.background = 0x${opacity_hex}${colors.surface.hexStripped}
 
         -- Viewer mode
-        swayimg.viewer.set_window_background(0x${opacity_hex}${surface.hexStripped})
+        swayimg.viewer.set_window_background(0x${opacity_hex}${colors.surface.hexStripped})
 
         -- Gallery mode
-        swayimg.gallery.selected_color = 0xff${surface_bright.hexStripped}
-        swayimg.gallery.unselected_color = 0xff${surface_dim.hexStripped}
-        swayimg.gallery.border_color = 0xff${primary.hexStripped}
-        swayimg.gallery.window_color = 0x${opacity_hex}${surface.hexStripped}
+        swayimg.gallery.selected_color = 0xff${colors.surface_bright.hexStripped}
+        swayimg.gallery.unselected_color = 0xff${colors.surface_dim.hexStripped}
+        swayimg.gallery.border_color = 0xff${colors.primary.hexStripped}
+        swayimg.gallery.window_color = 0x${opacity_hex}${colors.surface.hexStripped}
       '';
     };
   };

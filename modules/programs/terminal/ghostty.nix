@@ -25,16 +25,16 @@
           font-size = font.size;
           theme = "md3";
         };
-        themes.md3 = with colors; {
+        themes.md3 = {
           palette = lib.genList (i: "${toString i}=${colors."color${toString i}".hex}") 256;
           palette-generate = true;
-          selection-background = primary.hexStripped;
-          selection-foreground = on_primary.hexStripped;
-          background = surface.hexStripped;
-          foreground = on_surface.hexStripped;
+          selection-background = colors.primary.hexStripped;
+          selection-foreground = colors.on_primary.hexStripped;
+          background = colors.surface.hexStripped;
+          foreground = colors.on_surface.hexStripped;
           background-opacity = opacity.hexStripped;
-          cursor-color = on_surface.hexStripped;
-          cursor-text = surface.hexStripped;
+          cursor-color = colors.on_surface.hexStripped;
+          cursor-text = colors.surface.hexStripped;
           cursor-style = "block";
           minimum-contrast = 1.1;
         };

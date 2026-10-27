@@ -106,24 +106,24 @@
     config = lib.mkIf config.programs.niri.enable {
       programs.i3status-rust.bars.niri = {
         icons = "material-nf";
-        theme = "${(pkgs.formats.toml {}).generate "i3status-theme.toml" (with colors; {
-          idle_bg = surface.hex;
-          idle_fg = on_surface.hex;
+        theme = "${(pkgs.formats.toml {}).generate "i3status-theme.toml" {
+          idle_bg = colors.surface.hex;
+          idle_fg = colors.on_surface.hex;
           alternating_tint_bg = let
             toInt = v: v.r * 65536 + v.g * 256 + v.b;
           in "#${
-            lib.fixedWidthString 6 "0" (lib.toHexString ((toInt surface_bright.rgb) - (toInt surface.rgb)))
+            lib.fixedWidthString 6 "0" (lib.toHexString ((toInt colors.surface_bright.rgb) - (toInt colors.surface.rgb)))
           }00";
-          info_bg = surface.hex;
-          info_fg = blue.hex;
-          good_bg = surface.hex;
-          good_fg = green.hex;
-          warning_bg = surface.hex;
-          warning_fg = orange.hex;
-          critical_bg = surface.hex;
-          critical_fg = error.hex;
+          info_bg = colors.surface.hex;
+          info_fg = colors.blue.hex;
+          good_bg = colors.surface.hex;
+          good_fg = colors.green.hex;
+          warning_bg = colors.surface.hex;
+          warning_fg = colors.orange.hex;
+          critical_bg = colors.surface.hex;
+          critical_fg = colors.error.hex;
           separator = "";
-        })}";
+        }}";
       };
     };
   };

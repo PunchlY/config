@@ -20,22 +20,22 @@
     inherit (config.theme) colors font;
   in {
     config = lib.mkIf config.programs.i3bar-river.enable {
-      programs.i3bar-river.settings = with colors; {
+      programs.i3bar-river.settings = {
         height = font.size * 2;
         font = "monospace ${toString font.size}";
 
         tags_padding = font.size;
         tags_margin = 0;
         separator_width = 0;
-        background = surface.hex;
-        tag_fg = on_surface.hex;
-        tag_bg = surface.hex;
-        tag_focused_fg = on_primary.hex;
-        tag_focused_bg = primary.hex;
-        tag_urgent_fg = on_error.hex;
-        tag_urgent_bg = error.hex;
-        tag_inactive_bg = surface.hex;
-        tag_inactive_fg = on_surface.hex;
+        background = colors.surface.hex;
+        tag_fg = colors.on_surface.hex;
+        tag_bg = colors.surface.hex;
+        tag_focused_fg = colors.on_primary.hex;
+        tag_focused_bg = colors.primary.hex;
+        tag_urgent_fg = colors.on_error.hex;
+        tag_urgent_bg = colors.error.hex;
+        tag_inactive_bg = colors.surface.hex;
+        tag_inactive_fg = colors.on_surface.hex;
       };
     };
   };

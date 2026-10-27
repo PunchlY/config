@@ -8,8 +8,8 @@
     lib,
     ...
   }: {
-    home.packages = with pkgs; [
-      xdg-utils
+    home.packages = [
+      pkgs.xdg-utils
     ];
 
     home.preferXdgDirectories = true;

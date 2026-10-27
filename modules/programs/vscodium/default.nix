@@ -19,28 +19,54 @@
       programs.vscodium.profiles.default = {
         enableUpdateCheck = false;
         enableExtensionUpdateCheck = false;
-        extensions =
-          (with pkgs.vscode-marketplace; [
-            ms-ceintl.vscode-language-pack-zh-hans
-            ririd.packages
-            formulahendry.auto-complete-tag
-            formulahendry.auto-close-tag
-            formulahendry.auto-rename-tag
-            christian-kohler.path-intellisense
-            sirtori.indenticator
-            kisstkondoros.vscode-gutter-preview
-            intellsmi.comment-translate
-            codeinchinese.englishchinesedictionary
-
-            bierner.github-markdown-preview
-            bierner.markdown-preview-github-styles
-            bierner.markdown-emoji
-            bierner.markdown-checkbox
-            bierner.markdown-footnotes
-          ])
-          ++ (with pkgs.open-vsx; [
-            jeanp413.open-remote-ssh
-          ]);
+        extensions = lib.attrValues {
+          inherit
+            (pkgs.vscode-marketplace.ms-ceintl)
+            vscode-language-pack-zh-hans
+            ;
+          inherit
+            (pkgs.vscode-marketplace.ririd)
+            packages
+            ;
+          inherit
+            (pkgs.vscode-marketplace.formulahendry)
+            auto-complete-tag
+            auto-close-tag
+            auto-rename-tag
+            ;
+          inherit
+            (pkgs.vscode-marketplace.christian-kohler)
+            path-intellisense
+            ;
+          inherit
+            (pkgs.vscode-marketplace.sirtori)
+            indenticator
+            ;
+          inherit
+            (pkgs.vscode-marketplace.kisstkondoros)
+            vscode-gutter-preview
+            ;
+          inherit
+            (pkgs.vscode-marketplace.intellsmi)
+            comment-translate
+            ;
+          inherit
+            (pkgs.vscode-marketplace.codeinchinese)
+            englishchinesedictionary
+            ;
+          inherit
+            (pkgs.vscode-marketplace.bierner)
+            github-markdown-preview
+            markdown-preview-github-styles
+            markdown-emoji
+            markdown-checkbox
+            markdown-footnotes
+            ;
+          inherit
+            (pkgs.open-vsx.jeanp413)
+            open-remote-ssh
+            ;
+        };
         userSettings = {
           "extensions.autoUpdate" = "off";
 

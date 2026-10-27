@@ -15,7 +15,20 @@
     ...
   }: let
     cfg = config.programs.uwsm;
-    variablesType = with lib.types;
+    variablesType = let
+      inherit
+        (lib.types)
+        lazyAttrsOf
+        nullOr
+        oneOf
+        listOf
+        str
+        path
+        int
+        float
+        bool
+        ;
+    in
       lazyAttrsOf (nullOr (oneOf [
         (listOf (oneOf [
           str

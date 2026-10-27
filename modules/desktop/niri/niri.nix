@@ -80,12 +80,15 @@
     };
 
     config = lib.mkIf cfg.enable {
-      home.packages = with pkgs; [
-        cfg.package
-        libnotify
-        brightnessctl
-        wl-clipboard
-      ];
+      home.packages = lib.attrValues {
+        niri = cfg.package;
+        inherit
+          (pkgs)
+          libnotify
+          brightnessctl
+          wl-clipboard
+          ;
+      };
 
       xdg.configFile."niri/config.kdl".source =
         inputs.niri.lib.internal.validated-config-for pkgs cfg.package cfg.finalConfig;
@@ -94,9 +97,9 @@
         enable = true;
         xdgOpenUsePortal = true;
 
-        extraPortals = with pkgs; [
-          xdg-desktop-portal-gnome
-          xdg-desktop-portal-gtk
+        extraPortals = [
+          pkgs.xdg-desktop-portal-gnome
+          pkgs.xdg-desktop-portal-gtk
         ];
 
         config.niri = {

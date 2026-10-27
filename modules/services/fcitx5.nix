@@ -8,8 +8,8 @@
     config = lib.mkIf (config.i18n.inputMethod.enable && config.i18n.inputMethod.type == "fcitx5") {
       i18n.inputMethod.fcitx5 = {
         waylandFrontend = true;
-        addons = with pkgs; [
-          qt6Packages.fcitx5-chinese-addons
+        addons = [
+          pkgs.qt6Packages.fcitx5-chinese-addons
         ];
 
         settings.globalOptions = {
@@ -84,7 +84,7 @@
           TrayFont = "monospace ${toString font.size}";
         };
 
-        themes.matugen = with colors; {
+        themes.matugen = {
           theme = {
             Metadata = {
               Name = "Matugen";
@@ -95,10 +95,10 @@
 
             InputPanel = {
               EnableBlur = false;
-              NormalColor = on_surface.hex;
-              HighlightCandidateColor = on_primary.hex;
-              HighlightColor = on_primary.hex;
-              HighlightBackgroundColor = surface.hex;
+              NormalColor = colors.on_surface.hex;
+              HighlightCandidateColor = colors.on_primary.hex;
+              HighlightColor = colors.on_primary.hex;
+              HighlightBackgroundColor = colors.surface.hex;
               Spacing = 3;
             };
             "InputPanel/TextMargin" = {
@@ -108,7 +108,7 @@
               Bottom = 6;
             };
 
-            "InputPanel/Background".Color = surface.hex;
+            "InputPanel/Background".Color = colors.surface.hex;
             "InputPanel/Background/Margin" = {
               Left = 2;
               Right = 2;
@@ -116,7 +116,7 @@
               Bottom = 2;
             };
 
-            "InputPanel/Highlight".Color = primary.hex;
+            "InputPanel/Highlight".Color = colors.primary.hex;
             "InputPanel/Highlight/Margin" = {
               Left = 10;
               Right = 10;

@@ -6,8 +6,8 @@
     ...
   }: {
     programs.vscodium.profiles.default = lib.mkIf config.programs.vscodium.enable {
-      extensions = with pkgs.vscode-marketplace; [
-        mkhl.shfmt
+      extensions = [
+        pkgs.vscode-marketplace.mkhl.shfmt
       ];
       userSettings = {
         "shfmt.executablePath" = lib.getExe pkgs.shfmt;

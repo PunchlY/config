@@ -6,8 +6,8 @@
     ...
   }: {
     programs.vscodium.profiles.default = lib.mkIf config.programs.vscodium.enable {
-      extensions = with pkgs.vscode-marketplace; [
-        jnoortheen.nix-ide
+      extensions = [
+        pkgs.vscode-marketplace.jnoortheen.nix-ide
       ];
       userSettings = {
         "nix.enableLanguageServer" = true;

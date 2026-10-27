@@ -35,8 +35,8 @@
     ...
   }: {
     config = lib.mkIf config.programs.niri.enable {
-      home.packages = with pkgs; [
-        piri
+      home.packages = [
+        pkgs.piri
       ];
       programs.niri.settings = {
         spawn-at-startup = [

@@ -6,8 +6,8 @@
     ...
   }: {
     programs.vscodium.profiles.default = lib.mkIf config.programs.vscodium.enable {
-      extensions = with pkgs.vscode-extensions; [
-        denoland.vscode-deno
+      extensions = [
+        pkgs.vscode-extensions.denoland.vscode-deno
       ];
       userSettings = {
         "deno.lint" = true;

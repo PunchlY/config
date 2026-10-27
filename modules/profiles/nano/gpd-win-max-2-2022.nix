@@ -4,17 +4,20 @@
     lib,
     ...
   }: {
-    imports = with inputs.nixos-hardware.nixosModules; [
-      common-pc-laptop
-      common-pc-ssd
-      common-hidpi
-      common-cpu-amd
-      common-cpu-amd-pstate
-      common-gpu-amd
-    ];
+    imports = lib.attrValues {
+      inherit
+        (inputs.nixos-hardware.nixosModules)
+        common-pc-laptop
+        common-pc-ssd
+        common-hidpi
+        common-cpu-amd
+        common-cpu-amd-pstate
+        common-gpu-amd
+        ;
+    };
 
-    environment.systemPackages = with pkgs; [
-      pywincontrols
+    environment.systemPackages = [
+      pkgs.pywincontrols
     ];
 
     hardware.sensor.iio.enable = true;

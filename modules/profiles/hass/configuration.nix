@@ -2,6 +2,7 @@
   configurations.nixos.hass.module = {
     config,
     pkgs,
+    lib,
     ...
   }: {
     boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -42,21 +43,36 @@
 
     services.home-assistant = {
       enable = true;
-      customComponents = with pkgs; [
-        home-assistant-custom-components.xiaomi_home
-        home-assistant-grid-south
-        home-assistant-haier
-        home-assistant-midea-auto-cloud
-      ];
+      customComponents = lib.attrValues {
+        inherit
+          (pkgs.home-assistant-custom-components)
+          xiaomi_home
+          ;
+        inherit
+          (pkgs)
+          home-assistant-grid-south
+          home-assistant-haier
+          home-assistant-midea-auto-cloud
+          ;
+      };
 
-      customLovelaceModules = with pkgs; [
-        home-assistant-custom-lovelace-modules.mushroom
-        nur.repos.mrene.timer-bar-card
-      ];
+      customLovelaceModules = lib.attrValues {
+        inherit
+          (pkgs.home-assistant-custom-lovelace-modules)
+          mushroom
+          ;
+        inherit
+          (pkgs.nur.repos.mrene)
+          timer-bar-card
+          ;
+      };
 
-      themes = with pkgs.home-assistant-themes; [
-        material-you-theme
-      ];
+      themes = lib.attrValues {
+        inherit
+          (pkgs.home-assistant-themes)
+          material-you-theme
+          ;
+      };
 
       extraComponents = [
         "default_config"
@@ -92,13 +108,16 @@
       };
 
       extraPackages = ps:
-        with ps; [
-          isal
-          zlib-ng
-          hap-python
-          pyqrcode
-          gtts
-        ];
+        lib.attrValues {
+          inherit
+            (ps)
+            isal
+            zlib-ng
+            hap-python
+            pyqrcode
+            gtts
+            ;
+        };
     };
 
     services.logind.settings.Login = {

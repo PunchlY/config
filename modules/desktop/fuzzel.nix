@@ -35,19 +35,19 @@
           radius = 0;
           selection-radius = 0;
         };
-        colors = with colors; {
-          background = "${surface.hexStripped}${lib.fixedWidthString 2 "0" (lib.toHexString (lib.ceil (opacity * 255)))}";
-          text = "${on_surface.hexStripped}ff";
-          message = "${orange.hexStripped}ff";
-          prompt = "${secondary.hexStripped}ff";
-          placeholder = "${tertiary.hexStripped}ff";
-          input = "${primary.hexStripped}ff";
-          match = "${primary.hexStripped}ff";
-          selection = "${primary.hexStripped}ff";
-          selection-text = "${on_primary.hexStripped}ff";
-          selection-match = "${on_primary.hexStripped}ff";
-          counter = "${secondary.hexStripped}ff";
-          border = "${primary.hexStripped}ff";
+        colors = {
+          background = "${colors.surface.hexStripped}${lib.fixedWidthString 2 "0" (lib.toHexString (lib.ceil (opacity * 255)))}";
+          text = "${colors.on_surface.hexStripped}ff";
+          message = "${colors.orange.hexStripped}ff";
+          prompt = "${colors.secondary.hexStripped}ff";
+          placeholder = "${colors.tertiary.hexStripped}ff";
+          input = "${colors.primary.hexStripped}ff";
+          match = "${colors.primary.hexStripped}ff";
+          selection = "${colors.primary.hexStripped}ff";
+          selection-text = "${colors.on_primary.hexStripped}ff";
+          selection-match = "${colors.on_primary.hexStripped}ff";
+          counter = "${colors.secondary.hexStripped}ff";
+          border = "${colors.primary.hexStripped}ff";
         };
       };
     };

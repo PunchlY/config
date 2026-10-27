@@ -9,8 +9,8 @@
   flake.modules.nixos.base = {pkgs, ...}: {
     imports = [inputs.sops-nix.nixosModules.sops];
 
-    environment.systemPackages = with pkgs; [
-      sops
+    environment.systemPackages = [
+      pkgs.sops
     ];
 
     sops.defaultSopsFile = "${inputs.self}/secrets/secrets.yaml";

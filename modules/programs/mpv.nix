@@ -62,15 +62,18 @@
           ytdl-format = "best";
         };
 
-        scripts = with pkgs.mpvScripts; [
-          mpris
-          uosc
-          reload
-          sponsorblock
-          quality-menu
-          thumbfast
-          uosc-danmaku
-        ];
+        scripts = lib.attrValues {
+          inherit
+            (pkgs.mpvScripts)
+            mpris
+            uosc
+            reload
+            sponsorblock
+            quality-menu
+            thumbfast
+            uosc-danmaku
+            ;
+        };
 
         scriptOpts.ytdl_hook.ytdl_path = lib.getExe config.programs.yt-dlp.package;
 
@@ -133,27 +136,26 @@
   in {
     config = lib.mkIf config.programs.mpv.enable {
       programs.mpv = {
-        config = with colors; {
-          background-color = surface.hex;
-          osd-back-color = surface.hex;
-          osd-border-color = surface.hex;
-          osd-color = on_surface.hex;
-          osd-shadow-color = shadow.hex;
+        config = {
+          background-color = colors.surface.hex;
+          osd-back-color = colors.surface.hex;
+          osd-border-color = colors.surface.hex;
+          osd-color = colors.on_surface.hex;
+          osd-shadow-color = colors.shadow.hex;
 
           osd-font = "monospace";
           sub-font = "monospace";
         };
 
         scriptOpts.uosc = {
-          color = with colors;
-            lib.concatMapAttrsStringSep "," (name: value: "${name}=${value}") {
-              foreground = on_surface.hexStripped;
-              foreground_text = surface.hexStripped;
-              background = surface.hexStripped;
-              background_text = on_surface.hexStripped;
-              success = green.hexStripped;
-              error = error.hexStripped;
-            };
+          color = lib.concatMapAttrsStringSep "," (name: value: "${name}=${value}") {
+            foreground = colors.on_surface.hexStripped;
+            foreground_text = colors.surface.hexStripped;
+            background = colors.surface.hexStripped;
+            background_text = colors.on_surface.hexStripped;
+            success = colors.green.hexStripped;
+            error = colors.error.hexStripped;
+          };
         };
       };
     };

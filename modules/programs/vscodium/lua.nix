@@ -6,9 +6,9 @@
     ...
   }: {
     programs.vscodium.profiles.default = lib.mkIf config.programs.vscodium.enable {
-      extensions = with pkgs.vscode-marketplace; [
-        sumneko.lua
-        johnnymorganz.stylua
+      extensions = [
+        pkgs.vscode-marketplace.sumneko.lua
+        pkgs.vscode-marketplace.johnnymorganz.stylua
       ];
       userSettings = {
         "stylua.styluaPath" = lib.getExe pkgs.stylua;

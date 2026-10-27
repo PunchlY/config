@@ -8,12 +8,15 @@
     config = lib.mkIf config.programs.prismlauncher.enable {
       programs.prismlauncher = {
         package = pkgs.prismlauncher.override {
-          jdks = with pkgs; [
-            zulu25
-            zulu21
-            zulu17
-            zulu8
-          ];
+          jdks = lib.attrValues {
+            inherit
+              (pkgs)
+              zulu25
+              zulu21
+              zulu17
+              zulu8
+              ;
+          };
         };
       };
     };
