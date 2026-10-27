@@ -6,6 +6,10 @@
     ...
   }: {
     config = lib.mkIf config.programs.mpv.enable {
+      home.packages = [
+        pkgs.material-icons # for uosc
+      ];
+
       programs.yt-dlp = {
         enable = true;
         settings = {
@@ -139,7 +143,6 @@
           osd-font = "monospace";
           sub-font = "monospace";
         };
-        scriptOpts.ytdl_hook.ytdl_path = lib.getExe config.programs.yt-dlp.package;
 
         scriptOpts.uosc = {
           color = with colors;

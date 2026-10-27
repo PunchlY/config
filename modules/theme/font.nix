@@ -108,8 +108,6 @@
       packages = lib.mapAttrsToList (_: cfg: cfg.package) config.theme.font.fonts;
     };
 
-    hm.fonts.fontconfig.enable = false;
-
     hm.xdg.dataFile."fonts".source = config.hm.lib.file.mkOutOfStoreSymlink "/run/current-system/sw/share/X11/fonts";
   };
 }
