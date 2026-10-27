@@ -70,7 +70,7 @@
 
     services.searx.enable = true;
 
-    services.daed.enable = true;
+    services.honk-core.enable = true;
 
     programs.chromium.enable = true;
 
