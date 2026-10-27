@@ -8,6 +8,10 @@
 
   flake.modules.nixos.base = {
     imports = [inputs.nix-index-database.nixosModules.default];
-    programs.nix-index.enable = false;
+    programs.nix-index = {
+      enableBashIntegration = false;
+      enableFishIntegration = false;
+      enableZshIntegration = false;
+    };
   };
 }
