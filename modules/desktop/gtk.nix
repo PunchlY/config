@@ -6,15 +6,11 @@
   flake.modules.homeManager.theme = {
     config,
     pkgs,
-    lib,
     ...
   }: let
     inherit (config.theme) colors font cursor;
 
     gtkCss = with colors; ''
-      ${lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (name: value: "@define-color ${name} ${value.hex};") colors
-      )}
       @define-color accent_color ${primary_fixed_dim.hex};
       @define-color accent_fg_color ${on_primary_fixed.hex};
       @define-color accent_bg_color ${primary_fixed_dim.hex};

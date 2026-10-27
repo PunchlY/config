@@ -14,13 +14,20 @@
         localSystem =
           if isCross
           then stdenv.buildPlatform
-          else nixpkgs.legacyPackages.${stdenv.hostPlatform.system}.stdenv.hostPlatform;
+          else stdenv.hostPlatform;
         crossSystem =
           if isCross
           then stdenv.hostPlatform
           else null;
       };
+      overlayFinal =
+        pkgs
+        // packages
+        // {
+          callPackage = pkgs.newScope overlayFinal;
+        };
+      packages = overlay overlayFinal pkgs;
     in
-      overlay (pkgs.appendOverlay overlay) pkgs;
+      packages;
   };
 }
