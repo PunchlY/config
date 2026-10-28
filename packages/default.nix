@@ -82,5 +82,7 @@
         program = "${binPath}/${name}";
         meta.description = name;
       });
+
+    legacyPackages.pkgs = final;
   };
 }

@@ -188,8 +188,6 @@
 
     hm.programs.eza.enable = true;
 
-    programs.nix-index-database.comma.enable = true;
-
     hm.programs.bash.enable = true;
 
     hm.programs.impala.enable = true;
