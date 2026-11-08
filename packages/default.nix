@@ -77,15 +77,13 @@
       wleird = final.callPackage ./wleird.nix {};
     };
 
-    apps = let
-      binPath = "${lib.getBin final.custom-scripts}/bin";
-    in
-      lib.readDir binPath
-      |> lib.mapAttrs (name: _: {
+    apps =
+      lib.mapAttrs (name: script: {
         type = "app";
-        program = "${binPath}/${name}";
+        program = lib.getExe script;
         meta.description = name;
-      });
+      })
+      final.custom-scripts.scripts;
 
     legacyPackages.pkgs = final;
   };

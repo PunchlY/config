@@ -3,7 +3,7 @@ set -euo pipefail
 
 ((! $#)) && exit 1
 
-url="$(@python314@/bin/python -c 'from pathlib import Path; import sys; print(Path(sys.argv[1]).resolve().as_uri())' "$1")"
+url="$(@fileurl@ "$1")"
 
 name="$(@coreutils@/bin/basename "$1")"
 
