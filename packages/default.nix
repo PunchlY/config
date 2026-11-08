@@ -32,6 +32,8 @@
           '';
       });
 
+      clash-controller-api = final.python3Packages.callPackage ./clash-controller-api.nix {};
+
       cmd = final.callPackage ./cmd.nix {};
 
       cmd-polkit = pkgs.cmd-polkit.overrideAttrs {
@@ -61,6 +63,8 @@
       home-assistant-haier = final.home-assistant.python3Packages.callPackage ./home-assistant/haier.nix {};
 
       home-assistant-midea-auto-cloud = final.home-assistant.python3Packages.callPackage ./home-assistant/midea-auto-cloud.nix {};
+
+      home-assistant-clash-controller = final.home-assistant.python3Packages.callPackage ./home-assistant/clash-controller.nix {};
 
       pywincontrols = final.python3Packages.callPackage ./pywincontrols.nix {};
 

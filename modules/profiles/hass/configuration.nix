@@ -53,6 +53,7 @@
           home-assistant-grid-south
           home-assistant-haier
           home-assistant-midea-auto-cloud
+          home-assistant-clash-controller
           ;
       };
 
