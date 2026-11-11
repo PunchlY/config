@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  configurations.nixos.nano.module = {
+  configurations.nixos.nano.host = {
     pkgs,
     lib,
     ...

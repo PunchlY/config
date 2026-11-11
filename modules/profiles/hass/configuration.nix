@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  configurations.nixos.hass.module = {
+  configurations.nixos.hass.host = {
     config,
     pkgs,
     lib,

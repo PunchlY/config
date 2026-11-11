@@ -13,7 +13,7 @@
     };
   };
 
-  configurations.nixos.tap.module = {pkgs, ...}: {
+  configurations.nixos.tap.host = {pkgs, ...}: {
     boot.kernelPackages = pkgs.linuxPackages_cachyos;
     hardware.nvidia.package = pkgs.nvidia_cachyos;
 

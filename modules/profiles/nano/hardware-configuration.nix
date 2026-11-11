@@ -1,5 +1,5 @@
 {
-  configurations.nixos.nano.module = {
+  configurations.nixos.nano.host = {
     config,
     lib,
     modulesPath,

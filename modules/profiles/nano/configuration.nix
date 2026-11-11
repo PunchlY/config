@@ -1,18 +1,13 @@
 {
-  configurations.nixos.nano.theme = {
+  configurations.nixos.nano.theme = {pkgs, ...}: {
     enable = true;
-    wallpaper = {
-      runCommandLocal,
-      fetchurl,
-      imagemagick,
-    }:
-      runCommandLocal "wallpaper.png" {
-        src = fetchurl {
-          url = "https://pixiv.cat/68936009.jpg";
-          sha256 = "sha256-s8eDdjoZaTWcSodD3xOQX6iGYHLa9sf9DnTw8Dzitgc=";
-        };
-        nativeBuildInputs = [imagemagick];
-      } "magick $src -fuzz 10% -trim +repage $out";
+    wallpaper = pkgs.runCommandLocal "wallpaper.png" {
+      src = pkgs.fetchurl {
+        url = "https://pixiv.cat/68936009.jpg";
+        sha256 = "sha256-s8eDdjoZaTWcSodD3xOQX6iGYHLa9sf9DnTw8Dzitgc=";
+      };
+      nativeBuildInputs = [pkgs.imagemagick];
+    } "magick $src -fuzz 10% -trim +repage $out";
   };
 
   configurations.nixos.nano.gaming = {
@@ -28,7 +23,7 @@
     };
   };
 
-  configurations.nixos.nano.module = {pkgs, ...}: {
+  configurations.nixos.nano.host = {pkgs, ...}: {
     boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     boot.loader.systemd-boot.enable = true;

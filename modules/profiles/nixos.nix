@@ -1,31 +1,36 @@
 {
   inputs,
-  lib,
   config,
+  lib,
   ...
 }: {
-  options.configurations.nixos = lib.mkOption {
+  flake-file.inputs = {
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+  };
+
+  configurations.options.nixos = lib.mkOption {
     type = lib.types.lazyAttrsOf (lib.types.submodule ({
       name,
       config,
+      options,
+      pkgs,
       ...
     }: {
       options = {
-        hostName = lib.mkOption {
-          type = lib.types.str;
-          default = name;
-        };
-        module = lib.mkOption {
+        host = lib.mkOption {
           type = lib.types.deferredModule;
-          apply = v: {
-            _class = "nixos";
-            imports = [v];
-          };
         };
-        theme = {
-          enable = lib.mkEnableOption "theme";
-          wallpaper = lib.mkOption {
-            type = lib.types.nullOr lib.types.unspecified;
+        theme = lib.mkOption {
+          type = lib.types.submodule {
+            options = {
+              enable = lib.mkEnableOption "theme";
+              wallpaper = lib.mkOption {
+                type = lib.types.nullOr lib.types.raw;
+              };
+            };
+            config = {
+              _module.args.pkgs = pkgs;
+            };
           };
         };
         gaming = {
@@ -38,44 +43,44 @@
             }));
           };
         };
+        configuration = lib.mkOption {
+          type = lib.types.submodule {
+            options.modules = lib.mkOption {
+              type = lib.types.listOf lib.types.raw;
+            };
+          };
+          apply = lib.nixosSystem;
+        };
       };
       config = {
+        _module.args.pkgs = config.configuration.pkgs;
         theme.enable = lib.mkIf config.gaming.enable true;
+        host.networking.hostName = name;
+        configuration.modules =
+          [
+            inputs.self.modules.nixos.base
+            config.host
+          ]
+          ++ lib.optionals config.theme.enable [
+            inputs.self.modules.nixos.theme
+            {
+              theme.wallpaper = config.theme.wallpaper;
+            }
+          ]
+          ++ lib.optional config.gaming.enable {
+            imports = [inputs.self.modules.nixos.gaming];
+            jovian.steam = {
+              enable = true;
+              autoStart = true;
+              desktopSession = lib.mkDefault "gamescope-wayland";
+            };
+            hm.games = config.gaming.games;
+          };
       };
     }));
   };
 
-  config.flake.nixosConfigurations =
-    lib.flip lib.mapAttrs config.configurations.nixos
-    (_: cfg:
-      lib.nixosSystem {
-        modules =
-          [
-            cfg.module
-            inputs.self.modules.nixos.base
-            {
-              networking.hostName = cfg.hostName;
-            }
-          ]
-          ++ lib.optionals cfg.theme.enable [
-            inputs.self.modules.nixos.theme
-          ]
-          ++ lib.optional (cfg.theme.enable && cfg.theme.wallpaper != null) ({pkgs, ...}: {
-            theme.wallpaper =
-              if lib.isFunction cfg.theme.wallpaper
-              then pkgs.callPackage cfg.theme.wallpaper {}
-              else cfg.theme.wallpaper;
-          })
-          ++ lib.optionals cfg.gaming.enable [
-            inputs.self.modules.nixos.gaming
-            {
-              jovian.steam = {
-                enable = true;
-                autoStart = true;
-                desktopSession = lib.mkDefault "gamescope-wayland";
-              };
-              hm.games = cfg.gaming.games;
-            }
-          ];
-      });
+  flake.nixosConfigurations =
+    lib.mapAttrs (_: value: value.configuration)
+    config.configurations.nixos;
 }
