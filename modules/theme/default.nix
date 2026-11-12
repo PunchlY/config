@@ -1,33 +1,33 @@
 {inputs, ...}: {
-  flake.modules.nixos.theme = {
+  flake.modules.nixosConfiguration.base = {
     config,
     lib,
+    pkgs,
     ...
   }: {
-    imports = [inputs.self.modules.generic.theme];
-    hm.imports =
-      [inputs.self.modules.homeManager.theme]
-      ++ map (path: lib.getAttrFromPath path config |> lib.mkDefault |> lib.setAttrByPath path) (
-        [
-          ["theme" "wallpaper"]
-          ["theme" "opacity"]
-
-          ["theme" "cursor" "name"]
-          ["theme" "cursor" "package"]
-          ["theme" "cursor" "size"]
-
-          ["theme" "font" "size"]
-        ]
-        ++ lib.concatMap
-        (name: [
-          ["theme" "font" "fonts" name "name"]
-          ["theme" "font" "fonts" name "package"]
-        ])
-        (lib.attrNames config.theme.font.fonts)
-      );
-  };
-
-  flake.modules.homeManager.theme = {
-    imports = [inputs.self.modules.generic.theme];
+    options.theme = lib.mkOption {
+      type = lib.types.submoduleWith {
+        modules = [
+          {
+            options.enable = lib.mkEnableOption "theme";
+          }
+        ];
+        specialArgs.pkgs = pkgs;
+      };
+    };
+    config = lib.mkIf config.theme.enable {
+      host = {
+        imports = [inputs.self.modules.nixos.theme];
+        options.theme = lib.mkOption {
+          apply = _: config.theme;
+        };
+        config.hm = {
+          imports = [inputs.self.modules.homeManager.theme];
+          options.theme = lib.mkOption {
+            apply = _: config.theme;
+          };
+        };
+      };
+    };
   };
 }

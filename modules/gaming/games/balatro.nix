@@ -9,7 +9,6 @@
       url = "https://github.com/ethangreen-dev/lovely-injector/releases/download/v0.10.0/lovely-x86_64-pc-windows-msvc.zip";
       hash = "sha256-wUYHdGlW2Rubl5+VRHEdYcHh0nPEsnw2uksKCpX8Gok=";
     };
-    inherit (config.configuration.config.hm.lib.file) mkOutOfStoreSymlink;
     inherit (config.configuration.config.hm.xdg) dataHome;
   in {
     gaming.games.balatro = {
@@ -26,7 +25,7 @@
           "version.dll"
         ];
         files.prefix.place = {
-          "drive_c/users/steamuser/AppData/Roaming/Balatro/Mods".source = mkOutOfStoreSymlink "${dataHome}/Balatro/Mods";
+          "drive_c/users/steamuser/AppData/Roaming/Balatro/Mods".source = config.lib.file.mkOutOfStoreSymlink "${dataHome}/Balatro/Mods";
         };
       };
     };

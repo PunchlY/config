@@ -1,10 +1,5 @@
 {
-  flake.modules.nixosConfiguration.base = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.modules.nixosConfiguration.base = {pkgs, ...}: {
     gaming.games.browndust2 = {
       name = "Brown Dust 2";
       steam-config.nonSteamApp = {

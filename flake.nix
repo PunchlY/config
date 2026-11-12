@@ -84,13 +84,5 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    waydroid-nvidia-nix = {
-      url = "github:yigexuanmu/waydroid-nvidia-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    waydroid-script = {
-      url = "github:casualsnek/waydroid_script";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 }

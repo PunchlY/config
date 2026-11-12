@@ -39,7 +39,6 @@
   flake.modules.nixosConfiguration.base = {
     config,
     pkgs,
-    lib,
     ...
   }: {
     gaming.games.wiliwili = {

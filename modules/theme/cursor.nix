@@ -1,5 +1,6 @@
 {
-  flake.modules.generic.theme = {
+  flake.modules.nixosConfiguration.base = {
+    config,
     pkgs,
     lib,
     ...
@@ -20,18 +21,17 @@
         };
       };
     };
-  };
+    config.host = {
+      environment.variables = {
+        XCURSOR_SIZE = lib.toString config.theme.cursor.size;
+      };
 
-  flake.modules.nixos.theme = {config, ...}: {
-    environment.variables.XCURSOR_SIZE = toString config.theme.cursor.size;
-  };
-
-  flake.modules.homeManager.theme = {config, ...}: {
-    home.pointerCursor = {
-      enable = true;
-      inherit (config.theme.cursor) name package size;
-      x11.enable = true;
-      gtk.enable = true;
+      hm.home.pointerCursor = {
+        enable = true;
+        inherit (config.theme.cursor) name package size;
+        x11.enable = true;
+        gtk.enable = true;
+      };
     };
   };
 }

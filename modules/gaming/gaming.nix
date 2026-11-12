@@ -81,11 +81,11 @@
           apps =
             config.gaming.games
             |> lib.filterAttrs (_: cfg: cfg.enable && (cfg.steam-config ? app))
-            |> lib.mapAttrs' (name: cfg: lib.nameValuePair cfg.name cfg.steam-config.app);
+            |> lib.mapAttrs' (_name: cfg: lib.nameValuePair cfg.name cfg.steam-config.app);
           nonSteamApps =
             config.gaming.games
             |> lib.filterAttrs (_: cfg: cfg.enable && (cfg.steam-config ? nonSteamApp))
-            |> lib.mapAttrs' (name: cfg: lib.nameValuePair cfg.name cfg.steam-config.nonSteamApp);
+            |> lib.mapAttrs' (_name: cfg: lib.nameValuePair cfg.name cfg.steam-config.nonSteamApp);
         };
 
         xdg.dataFile = {

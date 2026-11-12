@@ -3,7 +3,7 @@
     oktheme.url = "github:PunchlY/oktheme";
   };
 
-  flake.modules.generic.theme = moduleWithSystem ({inputs'}: {
+  flake.modules.nixosConfiguration.base = moduleWithSystem ({inputs'}: {
     config,
     pkgs,
     lib,

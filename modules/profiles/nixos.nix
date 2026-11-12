@@ -11,27 +11,12 @@
   flake.modules.nixosConfiguration.base = {
     name,
     config,
-    pkgs,
     lib,
     ...
   }: {
     options = {
       host = lib.mkOption {
         type = lib.types.deferredModule;
-      };
-
-      theme = lib.mkOption {
-        type = lib.types.submodule {
-          options = {
-            enable = lib.mkEnableOption "theme";
-            wallpaper = lib.mkOption {
-              type = lib.types.nullOr lib.types.raw;
-            };
-          };
-          config = {
-            _module.args.pkgs = pkgs;
-          };
-        };
       };
 
       configuration = lib.mkOption {
@@ -42,23 +27,21 @@
         };
         apply = lib.nixosSystem;
       };
+
+      lib = lib.mkOption {
+        default = {};
+        type = lib.types.attrsOf lib.types.attrs;
+      };
     };
 
     config = {
       _module.args.pkgs = config.configuration.pkgs;
-      theme.enable = lib.mkIf config.gaming.enable true;
       host.networking.hostName = name;
-      configuration.modules =
-        [
-          inputs.self.modules.nixos.base
-          config.host
-        ]
-        ++ lib.optionals config.theme.enable [
-          inputs.self.modules.nixos.theme
-          {
-            theme.wallpaper = config.theme.wallpaper;
-          }
-        ];
+      configuration.modules = [
+        inputs.self.modules.nixos.base
+        config.host
+      ];
+      lib = config.configuration.config.lib // config.configuration.config.hm.lib;
     };
   };
 
