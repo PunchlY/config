@@ -1,22 +1,20 @@
 {
-  flake.modules.homeManager.gaming = {
+  flake.modules.nixosConfiguration.base = {
     config,
     pkgs,
     lib,
     ...
-  }: let
-    cfg = config.games.zzz;
-  in {
-    options.games.zzz = {
-      enable = lib.mkEnableOption "Zenless Zone Zero";
-      package = lib.mkPackageOption pkgs "sleepy-launcher" {};
+  }: {
+    host = lib.mkIf config.gaming.games.zzz.enable {
+      programs.sleepy-launcher.enable = true;
     };
 
-    config = lib.mkIf cfg.enable {
-      programs.steam.config.nonSteamApps."Zenless Zone Zero" = {
+    gaming.games.zzz = {
+      name = "Zenless Zone Zero";
+      steam-config.nonSteamApp = {
         desktopEntry.enable = false;
 
-        target = cfg.package;
+        target = config.configuration.config.programs.sleepy-launcher.package;
 
         artwork = {
           cover = pkgs.fetchurl {

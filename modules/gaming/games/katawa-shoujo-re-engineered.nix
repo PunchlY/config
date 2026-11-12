@@ -1,29 +1,27 @@
 {
-  flake.modules.homeManager.gaming = {
+  flake.modules.nixosConfiguration.base = {
     config,
     pkgs,
     lib,
     ...
-  }: let
-    cfg = config.games.katawa-shoujo-re-engineered;
-  in {
-    options.games.katawa-shoujo-re-engineered = {
-      enable = lib.mkEnableOption "Katawa Shoujo: Re-Engineered";
-      package = lib.mkPackageOption pkgs "katawa-shoujo-re-engineered" {};
+  }: {
+    host = lib.mkIf config.gaming.games.katawa-shoujo-re-engineered.enable {
+      hm.home.packages = [pkgs.katawa-shoujo-re-engineered];
     };
 
-    config = lib.mkIf cfg.enable {
-      programs.steam.config.nonSteamApps."Katawa Shoujo: Re-Engineered" = {
+    gaming.games.katawa-shoujo-re-engineered = {
+      name = "Katawa Shoujo: Re-Engineered";
+      steam-config.nonSteamApp = {
         desktopEntry.enable = false;
 
-        target = cfg.package;
+        target = pkgs.katawa-shoujo-re-engineered;
 
         artwork = {
-          cover = "${cfg.package}/share/kataswa-shoujo-re-engineered/game/presplash_background.png";
-          header = "${cfg.package}/share/kataswa-shoujo-re-engineered/game/presplash_background.png";
-          hero = "${cfg.package}/share/kataswa-shoujo-re-engineered/game/event/other_iwanako.png";
-          icon = "${cfg.package}/share/icons/hicolor/512x512/apps/katawa-shoujo-re-engineered.png";
-          logo = "${cfg.package}/share/kataswa-shoujo-re-engineered/game/gui/logo/credo.png";
+          cover = "${pkgs.katawa-shoujo-re-engineered}/share/kataswa-shoujo-re-engineered/game/presplash_background.png";
+          header = "${pkgs.katawa-shoujo-re-engineered}/share/kataswa-shoujo-re-engineered/game/presplash_background.png";
+          hero = "${pkgs.katawa-shoujo-re-engineered}/share/kataswa-shoujo-re-engineered/game/event/other_iwanako.png";
+          icon = "${pkgs.katawa-shoujo-re-engineered}/share/icons/hicolor/512x512/apps/katawa-shoujo-re-engineered.png";
+          logo = "${pkgs.katawa-shoujo-re-engineered}/share/kataswa-shoujo-re-engineered/game/gui/logo/credo.png";
         };
       };
     };

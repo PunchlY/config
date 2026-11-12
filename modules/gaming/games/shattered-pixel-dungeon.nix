@@ -1,22 +1,20 @@
 {
-  flake.modules.homeManager.gaming = {
+  flake.modules.nixosConfiguration.base = {
     config,
     pkgs,
     lib,
     ...
-  }: let
-    cfg = config.games.shattered-pixel-dungeon;
-  in {
-    options.games.shattered-pixel-dungeon = {
-      enable = lib.mkEnableOption "Shattered Pixel Dungeon";
-      package = lib.mkPackageOption pkgs "shattered-pixel-dungeon" {};
+  }: {
+    host = lib.mkIf config.gaming.games.shattered-pixel-dungeon.enable {
+      hm.home.packages = [pkgs.shattered-pixel-dungeon];
     };
 
-    config = lib.mkIf cfg.enable {
-      programs.steam.config.nonSteamApps."Shattered Pixel Dungeon" = {
+    gaming.games.shattered-pixel-dungeon = {
+      name = "Shattered Pixel Dungeon";
+      steam-config.nonSteamApp = {
         desktopEntry.enable = false;
 
-        target = cfg.package;
+        target = pkgs.shattered-pixel-dungeon;
 
         artwork = {
           cover = pkgs.fetchurl {

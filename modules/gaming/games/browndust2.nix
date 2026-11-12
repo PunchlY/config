@@ -1,21 +1,15 @@
 {
-  flake.modules.homeManager.gaming = {
+  flake.modules.nixosConfiguration.base = {
     config,
     pkgs,
     lib,
     ...
-  }: let
-    cfg = config.games.browndust2;
-  in {
-    options.games.browndust2 = {
-      enable = lib.mkEnableOption "Brown Dust 2";
-      package = lib.mkPackageOption pkgs "browndust2" {};
-    };
-
-    config = lib.mkIf cfg.enable {
-      programs.steam.config.nonSteamApps."Brown Dust 2" = {
+  }: {
+    gaming.games.browndust2 = {
+      name = "Brown Dust 2";
+      steam-config.nonSteamApp = {
         compatTool = pkgs.dwproton-bin;
-        target = "${cfg.package}/BD2StarterSetup.exe";
+        target = "${pkgs.browndust2}/BD2StarterSetup.exe";
 
         artwork = {
           cover = pkgs.fetchurl {

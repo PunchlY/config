@@ -1,22 +1,20 @@
 {
-  flake.modules.homeManager.gaming = {
+  flake.modules.nixosConfiguration.base = {
     config,
     pkgs,
     lib,
     ...
   }: let
-    cfg = config.games.balatro;
     lovely = pkgs.fetchzip {
       url = "https://github.com/ethangreen-dev/lovely-injector/releases/download/v0.10.0/lovely-x86_64-pc-windows-msvc.zip";
       hash = "sha256-wUYHdGlW2Rubl5+VRHEdYcHh0nPEsnw2uksKCpX8Gok=";
     };
+    inherit (config.configuration.config.hm.lib.file) mkOutOfStoreSymlink;
+    inherit (config.configuration.config.hm.xdg) dataHome;
   in {
-    options.games.balatro = {
-      enable = lib.mkEnableOption "Balatro";
-    };
-
-    config = lib.mkIf cfg.enable {
-      programs.steam.config.apps."2379780" = {
+    gaming.games.balatro = {
+      name = "2379780";
+      steam-config.app = {
         dllOverrides = {
           winmm = "n,b";
         };
@@ -28,10 +26,13 @@
           "version.dll"
         ];
         files.prefix.place = {
-          "drive_c/users/steamuser/AppData/Roaming/Balatro/Mods".source = config.lib.file.mkOutOfStoreSymlink "${config.xdg.dataHome}/Balatro/Mods";
+          "drive_c/users/steamuser/AppData/Roaming/Balatro/Mods".source = mkOutOfStoreSymlink "${dataHome}/Balatro/Mods";
         };
       };
-      xdg.dataFile = {
+    };
+
+    host = lib.mkIf config.gaming.games.balatro.enable {
+      hm.xdg.dataFile = {
         "Balatro/Mods/smods".source = pkgs.fetchFromGitHub {
           owner = "Steamodded";
           repo = "smods";

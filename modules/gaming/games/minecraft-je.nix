@@ -1,12 +1,13 @@
 {
-  flake.modules.homeManager.base = {
+  flake.modules.nixosConfiguration.base = {
     config,
     pkgs,
     lib,
     ...
   }: {
-    config = lib.mkIf config.programs.prismlauncher.enable {
-      programs.prismlauncher = {
+    host = lib.mkIf config.gaming.games.minecraft-je.enable {
+      hm.programs.prismlauncher = {
+        enable = true;
         package = pkgs.prismlauncher.override {
           jdks = lib.attrValues {
             inherit
@@ -20,27 +21,13 @@
         };
       };
     };
-  };
 
-  flake.modules.homeManager.gaming = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: let
-    cfg = config.games.minecraft-je;
-  in {
-    options.games.minecraft-je = {
-      enable = lib.mkEnableOption "minecraft-je";
-    };
-
-    config = lib.mkIf cfg.enable {
-      programs.prismlauncher.enable = true;
-
-      programs.steam.config.nonSteamApps."Minecraft: Java Edition" = {
+    gaming.games.minecraft-je = {
+      name = "Minecraft: Java Edition";
+      steam-config.nonSteamApp = {
         desktopEntry.enable = false;
 
-        target = config.programs.prismlauncher.package;
+        target = config.configuration.config.hm.programs.prismlauncher.package;
 
         artwork = {
           cover = pkgs.fetchurl {

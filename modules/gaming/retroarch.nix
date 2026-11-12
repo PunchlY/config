@@ -1,18 +1,12 @@
 {
-  flake.modules.homeManager.gaming = {
+  flake.modules.nixosConfiguration.base = {
     config,
     pkgs,
     lib,
     ...
-  }: let
-    cfg = config.games.retroarch;
-  in {
-    options.games.retroarch = {
-      enable = lib.mkEnableOption "retroarch";
-    };
-
-    config = lib.mkIf cfg.enable {
-      programs.retroarch = {
+  }: {
+    host = lib.mkIf config.gaming.games.retroarch.enable {
+      hm.programs.retroarch = {
         enable = true;
         cores = {
           # Nintendo
@@ -31,11 +25,14 @@
           ppsspp.enable = true; # PSP
         };
       };
+    };
 
-      programs.steam.config.nonSteamApps."RetroArch" = {
+    gaming.games.retroarch = {
+      name = "RetroArch";
+      steam-config.nonSteamApp = {
         desktopEntry.enable = false;
 
-        target = config.programs.retroarch.finalPackage;
+        target = "retroarch";
 
         artwork = {
           cover = pkgs.fetchurl {

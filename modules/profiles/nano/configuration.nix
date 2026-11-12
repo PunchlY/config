@@ -109,8 +109,6 @@
     };
     hm.programs.distrobox.enable = true;
 
-    virtualisation.waydroid.enable = true;
-
     jovian.hardware.has.amd.gpu = true;
 
     programs.niri.enable = true;

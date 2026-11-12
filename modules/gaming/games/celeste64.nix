@@ -1,22 +1,20 @@
 {
-  flake.modules.homeManager.gaming = {
+  flake.modules.nixosConfiguration.base = {
     config,
     pkgs,
     lib,
     ...
-  }: let
-    cfg = config.games.celeste64;
-  in {
-    options.games.celeste64 = {
-      enable = lib.mkEnableOption "Celeste 64: Fragments of the Mountain";
-      package = lib.mkPackageOption pkgs "celeste64" {};
+  }: {
+    host = lib.mkIf config.gaming.games.celeste64.enable {
+      hm.home.packages = [pkgs.celeste64];
     };
 
-    config = lib.mkIf cfg.enable {
-      programs.steam.config.nonSteamApps."Celeste 64: Fragments of the Mountain" = {
+    gaming.games.celeste64 = {
+      name = "Celeste 64: Fragments of the Mountain";
+      steam-config.nonSteamApp = {
         desktopEntry.enable = false;
 
-        target = cfg.package;
+        target = pkgs.celeste64;
 
         artwork = {
           cover = pkgs.fetchurl {

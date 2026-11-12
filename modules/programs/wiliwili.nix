@@ -36,19 +36,19 @@
     };
   };
 
-  flake.modules.homeManager.gaming = {
+  flake.modules.nixosConfiguration.base = {
     config,
     pkgs,
     lib,
     ...
-  }: let
-    cfg = config.programs.wiliwili;
-  in {
-    config = lib.mkIf cfg.enable {
-      programs.steam.config.nonSteamApps."WiliWili" = {
+  }: {
+    gaming.games.wiliwili = {
+      enable = config.configuration.config.hm.programs.wiliwili.enable;
+      name = "WiliWili";
+      steam-config.nonSteamApp = {
         desktopEntry.enable = false;
 
-        target = cfg.package;
+        target = config.configuration.config.hm.programs.wiliwili.package;
 
         artwork = {
           cover = pkgs.fetchurl {
