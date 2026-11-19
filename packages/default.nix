@@ -1,13 +1,4 @@
-{inputs, ...}: {
-  flake-file.inputs = {
-    bun2nix = {
-      url = "github:nix-community/bun2nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-  };
-
-  nixpkgs.overlays = [inputs.bun2nix.overlays.default];
-
+{
   perSystem = {
     config,
     final,
@@ -19,8 +10,6 @@
 
     overlayAttrs = {
       browndust2 = final.callPackage ./browndust2.nix {};
-
-      bun-types = final.callPackage ./bun-types/package.nix {};
 
       celeste64 = pkgs.celeste64.overrideAttrs (oldAttrs: {
         nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [final.makeWrapper];

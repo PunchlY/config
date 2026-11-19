@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  configurations.nixos.tap.host = {
+  den.aspects.tap.nixos = _: {
     imports = [
       inputs.nixos-hardware.nixosModules.lenovo-legion-15ach6h-nvidia
     ];

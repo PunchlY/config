@@ -1,47 +1,34 @@
-{
-  configurations.nixos.tap.gaming = {
-    enable = true;
-    games = {
-      minecraft-je.enable = true;
-      balatro.enable = true;
-      browndust2.enable = true;
-      celeste64.enable = true;
-      helltaker.enable = true;
-      katawa-shoujo-re-engineered.enable = true;
-      shattered-pixel-dungeon.enable = true;
-      zzz.enable = true;
-    };
-  };
+{den, ...}: {
+  den.hosts.x86_64-linux.tap.users.punchly = {};
 
-  configurations.nixos.tap.host = {pkgs, ...}: {
+  den.aspects.tap.includes = [
+    den.aspects.gaming
+    den.aspects.gaming.balatro
+    den.aspects.gaming.browndust2
+    den.aspects.gaming.celeste64
+    den.aspects.gaming.helltaker
+    den.aspects.gaming.katawa-shoujo-re-engineered
+    den.aspects.gaming.minecraft-je
+    den.aspects.gaming.shattered-pixel-dungeon
+    den.aspects.gaming.zzz
+
+    den.aspects.desktop.wiliwili
+
+    den.aspects.services.udiskie
+    den.aspects.services.pipewire
+  ];
+
+  den.aspects.tap.nixos = {pkgs, ...}: {
     boot.kernelPackages = pkgs.linuxPackages_cachyos;
     hardware.nvidia.package = pkgs.nvidia_cachyos;
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
-    boot.plymouth.enable = true;
-
-    networking.networkmanager.enable = true;
-
-    services.openssh.enable = true;
-
-    services.udisks2.enable = true;
-
-    services.pipewire.enable = true;
-
-    services.swapspace.enable = true;
-
-    services.dbus.enable = true;
-
     hardware.bluetooth.enable = true;
-
-    security.polkit.enable = true;
 
     services.udev.extraRules = ''
       ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
     '';
-
-    hm.programs.wiliwili.enable = true;
   };
 }

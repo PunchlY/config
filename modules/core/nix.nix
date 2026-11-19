@@ -2,7 +2,9 @@
   config,
   inputs,
   ...
-}: {
+}: let
+  inherit (config.flake-file) nixConfig;
+in {
   flake-file.nixConfig = {
     experimental-features = [
       "nix-command"
@@ -11,23 +13,33 @@
     ];
   };
 
-  flake.modules.nixos.base = {lib, ...}: let
-    flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
-  in {
-    nix = {
-      settings = {
-        experimental-features = config.flake-file.nixConfig.experimental-features or [];
-        accept-flake-config = true;
-        substituters = config.flake-file.nixConfig.substituters or [];
-        trusted-public-keys = config.flake-file.nixConfig.trusted-public-keys or [];
-        trusted-users = ["root" "@wheel"];
-
-        nix-path = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
-      };
-
-      channel.enable = false;
-
-      registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
+  den.default.nixos = {
+    config,
+    lib,
+    ...
+  }: {
+    nix.settings = {
+      experimental-features = nixConfig.experimental-features or [];
+      accept-flake-config = true;
+      substituters = nixConfig.substituters or [];
+      trusted-public-keys = nixConfig.trusted-public-keys or [];
+      trusted-users = ["root" "@wheel"];
     };
+
+    nix.channel.enable = false;
+
+    nix.registry =
+      inputs
+      |> lib.filterAttrs (_: lib.isType "flake")
+      |> lib.mapAttrs (_: flake: {inherit flake;});
+
+    sops.secrets."nix-access-tokens.conf" = {
+      group = "wheel";
+      mode = "0440";
+    };
+
+    nix.extraOptions = ''
+      !include ${config.sops.secrets."nix-access-tokens.conf".path}
+    '';
   };
 }

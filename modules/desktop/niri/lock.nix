@@ -1,50 +1,50 @@
 {
-  flake.modules.nixos.base = {
-    config,
+  den.aspects.desktop.niri.nixos = {
     pkgs,
     lib,
     utils,
     ...
   }: {
-    config = lib.mkIf config.programs.niri.enable {
-      security = {
-        polkit.enable = true;
-        pam.services.swaylock = {};
-      };
+    security = {
+      polkit.enable = true;
+      pam.services.swaylock = {};
+    };
 
-      services.systemd-lock-handler.enable = true;
+    services.systemd-lock-handler.enable = true;
 
-      systemd.user.services.niri-lock = {
-        requisite = ["graphical-session.target"];
-        after = ["wayland-wm@niri.service"];
-        onSuccess = ["unlock.target"];
-        partOf = ["lock.target"];
-        before = ["lock.target"];
-        wantedBy = ["lock.target"];
-        serviceConfig = {
-          Type = "forking";
-          ExecStart = utils.escapeSystemdExecArgs [
-            (lib.getExe pkgs.swaylock-effects)
-            "--daemonize"
-            "--clock"
-            "--indicator"
-            "--timestr=%H:%M:%S"
-            "--datestr=%Y-%m-%d"
-          ];
-          Restart = "on-failure";
-          RestartSec = 0;
-        };
+    systemd.user.services.niri-lock = {
+      requisite = ["graphical-session.target"];
+      after = ["wayland-wm@niri.service"];
+      onSuccess = ["unlock.target"];
+      partOf = ["lock.target"];
+      before = ["lock.target"];
+      wantedBy = ["lock.target"];
+      serviceConfig = {
+        Type = "forking";
+        ExecStart = utils.escapeSystemdExecArgs [
+          (lib.getExe pkgs.swaylock-effects)
+          "--daemonize"
+          "--clock"
+          "--indicator"
+          "--timestr=%H:%M:%S"
+          "--datestr=%Y-%m-%d"
+        ];
+        Restart = "on-failure";
+        RestartSec = 0;
       };
-      hm.programs.swaylock = {
-        package = lib.mkDefault null;
-        enable = true;
-      };
-      hm.programs.niri.settings = {
-        binds."Mod+Alt+L" = {
-          hotkey-overlay.title = "Lock the Screen";
-          allow-inhibiting = false;
-          action.spawn-sh = "loginctl lock-session";
-        };
+    };
+  };
+
+  den.aspects.desktop.niri.homeManager = {lib, ...}: {
+    programs.swaylock = {
+      enable = true;
+      package = lib.mkDefault null;
+    };
+    programs.niri.settings = {
+      binds."Mod+Alt+L" = {
+        hotkey-overlay.title = "Lock the Screen";
+        allow-inhibiting = false;
+        action.spawn-sh = "loginctl lock-session";
       };
     };
   };

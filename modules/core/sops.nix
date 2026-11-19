@@ -1,18 +1,15 @@
 {inputs, ...}: {
   flake-file.inputs = {
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    sops-nix.url = "github:Mic92/sops-nix";
   };
 
-  flake.modules.nixos.base = {pkgs, ...}: {
+  den.default.nixos = _: {
     imports = [inputs.sops-nix.nixosModules.sops];
 
-    environment.systemPackages = [
-      pkgs.sops
-    ];
-
     sops.defaultSopsFile = "${inputs.self}/secrets/secrets.yaml";
+  };
+
+  den.aspects.develop.homeManager = {pkgs, ...}: {
+    home.packages = [pkgs.sops];
   };
 }

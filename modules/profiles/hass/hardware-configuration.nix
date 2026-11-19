@@ -1,5 +1,5 @@
 {
-  configurations.nixos.hass.host = {
+  den.aspects.hass.nixos = {
     config,
     lib,
     modulesPath,

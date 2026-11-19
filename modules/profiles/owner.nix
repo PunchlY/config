@@ -1,62 +1,32 @@
-{
-  flake.modules.nixosConfiguration.base = {
-    config,
-    lib,
-    ...
-  }: {
-    options.owner = {
-      name = lib.mkOption {
-        type = lib.types.str;
-        default = "PunchlY";
-      };
-      username = lib.mkOption {
-        type = lib.types.str;
-        default = "punchly";
-      };
-      email = lib.mkOption {
-        type = lib.types.str;
-        default = "punchly9lin@gmail.com";
-      };
-      keys = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        default = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDMvu8NSsF7TP9JxxPhHeij113Kmw61KSPfpbLQvpsoY punchly@nano"
-        ];
-      };
-      initialHashedPassword = lib.mkOption {
-        type = lib.types.str;
-        default = "$y$j9T$K/hxRPyR.lSbYJwU1kbEI.$Uk.bhCt/rESx.qWrrUhUKKJMitZpWjqJpA0.URGoKXB";
+{den, ...}: {
+  den.aspects.punchly.includes = [
+    den.batteries.primary-user
+  ];
+
+  den.aspects.punchly.user = _: {
+    description = "PunchlY";
+    extraGroups = [
+      "audio"
+      "video"
+      "input"
+    ];
+    initialHashedPassword = "$y$j9T$K/hxRPyR.lSbYJwU1kbEI.$Uk.bhCt/rESx.qWrrUhUKKJMitZpWjqJpA0.URGoKXB";
+
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDMvu8NSsF7TP9JxxPhHeij113Kmw61KSPfpbLQvpsoY punchly@nano"
+    ];
+  };
+
+  den.aspects.punchly.homeManager = _: {
+    programs.git = {
+      settings.user = {
+        name = "PunchlY";
+        email = "punchly9lin@gmail.com";
       };
     };
-    config.host = {
-      imports = [
-        (lib.mkAliasOptionModule ["user"] ["users" "users" config.owner.username])
-        (lib.mkAliasOptionModule ["hm"] ["home-manager" "users" config.owner.username])
-      ];
+  };
 
-      user = {
-        uid = 1000;
-        isNormalUser = true;
-        useDefaultShell = true;
-        initialHashedPassword = config.owner.initialHashedPassword;
-
-        extraGroups = [
-          "wheel"
-          "networkmanager"
-          "audio"
-          "video"
-          "input"
-        ];
-
-        openssh.authorizedKeys.keys = config.owner.keys;
-      };
-
-      hm.programs.git = {
-        settings.user = {
-          name = config.owner.name;
-          email = config.owner.email;
-        };
-      };
-    };
+  den.aspects.punchly.jovian = {user, ...}: {
+    steam.user = user.userName;
   };
 }

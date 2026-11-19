@@ -27,14 +27,28 @@
   };
 
   inputs = {
-    aagl.url = "github:ezKEa/aagl-gtk-on-nix";
-    bun2nix = {
-      url = "github:nix-community/bun2nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+    aagl = {
+      url = "github:ezKEa/aagl-gtk-on-nix";
     };
-    ccicnce113424-nix-packages.url = "github:ccicnce113424/nix-packages";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    flake-file.url = "github:denful/flake-file";
+    ccicnce113424-nix-packages = {
+      url = "github:ccicnce113424/nix-packages";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nix-github-actions.inputs.nixpkgs.follows = "nixpkgs";
+        nvfetcher.inputs.nixpkgs.follows = "nixpkgs";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
+    chaotic = {
+      url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+      inputs.home-manager.follows = "home-manager";
+    };
+    den = {
+      url = "github:denful/den";
+    };
+    flake-file = {
+      url = "github:denful/flake-file";
+    };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
@@ -43,7 +57,9 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    import-tree.url = "github:denful/import-tree";
+    import-tree = {
+      url = "github:denful/import-tree";
+    };
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,14 +72,24 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixvim.url = "github:nix-community/nixvim";
-    nur = {
-      url = "github:nix-community/NUR";
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    oktheme.url = "github:PunchlY/oktheme";
+    nixpkgs = {
+      url = "github:NixOS/nixpkgs/nixos-unstable";
+    };
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.flake-parts.follows = "flake-parts";
+    };
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
     piri = {
       url = "github:Asthestarsfalll/piri";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -74,7 +100,18 @@
     };
     steam-config-nix = {
       url = "github:different-name/steam-config-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+        nur.follows = "nur";
+      };
     };
     tldr-pages = {
       url = "github:tldr-pages/tldr";

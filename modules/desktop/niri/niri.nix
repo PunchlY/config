@@ -1,141 +1,97 @@
-{inputs, ...}: {
+{
+  inputs,
+  den,
+  ...
+}: {
   flake-file.inputs = {
-    niri = {
-      url = "github:sodiboo/niri-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    niri.url = "github:sodiboo/niri-flake";
   };
 
-  flake.modules.nixos.base = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: let
-    cfg = config.programs.niri;
-  in {
-    disabledModules = ["programs/wayland/niri.nix"];
+  den.aspects.desktop.niri.includes = [
+    den.aspects.desktop.foot
+    den.aspects.desktop.fuzzel
+    den.aspects.desktop.mako
+    (den.aspects.gaming.desktop "niri-uwsm")
+  ];
 
-    options.programs.niri = {
-      enable = lib.mkEnableOption "Niri, a scrollable-tiling Wayland compositor";
-      package = lib.mkPackageOption pkgs "niri" {};
+  den.aspects.desktop.niri.nixos = {pkgs, ...}: {
+    environment.systemPackages = [pkgs.niri];
+
+    programs.uwsm = {
+      enable = true;
+      waylandCompositors.niri = {
+        prettyName = "Niri";
+        comment = "Niri compositor managed by UWSM";
+        binPath = "/run/current-system/sw/bin/niri";
+        extraArgs = ["--session"];
+      };
     };
 
-    config = lib.mkIf cfg.enable {
-      environment.systemPackages = [cfg.package];
+    services.gnome.gnome-keyring.enable = true;
 
-      hm.programs.niri = {
-        enable = true;
-        package = cfg.package;
-      };
+    services.graphical-desktop.enable = true;
 
-      programs.uwsm = {
-        enable = true;
-        waylandCompositors.niri = {
-          prettyName = "Niri";
-          comment = "Niri compositor managed by UWSM";
-          binPath = "/run/current-system/sw/bin/niri";
-          extraArgs = ["--session"];
-        };
-      };
-
-      services.gnome.gnome-keyring.enable = true;
-
-      services.graphical-desktop.enable = true;
-
-      security.polkit.enable = true;
-
-      programs.dconf.enable = true;
-
-      systemd.user.services.niri-flake-polkit = {
-        after = ["wayland-wm@niri.service"];
-        wantedBy = ["graphical-session.target"];
-        partOf = ["graphical-session.target"];
-        serviceConfig = {
-          Type = "simple";
-          ExecStart = "${pkgs.fuzzel-polkit-agent}/libexec/fuzzel-polkit-agent";
-          Restart = "on-failure";
-          RestartSec = 1;
-          TimeoutStopSec = 10;
-        };
+    systemd.user.services.niri-flake-polkit = {
+      after = ["wayland-wm@niri.service"];
+      wantedBy = ["graphical-session.target"];
+      partOf = ["graphical-session.target"];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.fuzzel-polkit-agent}/libexec/fuzzel-polkit-agent";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
       };
     };
   };
 
-  flake.modules.homeManager.base = {
+  den.aspects.desktop.niri.homeManager = {
     config,
     pkgs,
     lib,
     ...
-  }: let
-    cfg = config.programs.niri;
-  in {
-    disabledModules = ["services/window-managers/niri.nix"];
-    imports = [inputs.niri.lib.internal.settings-module];
+  }: {
+    imports = [
+      inputs.niri.homeModules.config
+      inputs.niri.homeModules.stylix
+    ];
 
-    options.programs.niri = {
-      enable = lib.mkEnableOption "Niri, a scrollable-tiling Wayland compositor";
-
-      package = lib.mkPackageOption pkgs "niri" {};
+    home.packages = lib.attrValues {
+      inherit
+        (pkgs)
+        libnotify
+        brightnessctl
+        wl-clipboard
+        ;
     };
 
-    config = lib.mkIf cfg.enable {
-      home.packages = lib.attrValues {
-        niri = cfg.package;
-        inherit
-          (pkgs)
-          libnotify
-          brightnessctl
-          wl-clipboard
-          ;
+    xdg.portal = {
+      enable = true;
+      xdgOpenUsePortal = true;
+
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gnome
+        pkgs.xdg-desktop-portal-gtk
+      ];
+
+      config.niri = {
+        default = ["gnome" "gtk"];
+        "org.freedesktop.impl.portal.Access" = "gtk";
+        "org.freedesktop.impl.portal.FileChooser" = "gtk";
+        "org.freedesktop.impl.portal.Notification" = "gtk";
+        "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
       };
+    };
 
-      xdg.configFile."niri/config.kdl".source =
-        inputs.niri.lib.internal.validated-config-for pkgs cfg.package cfg.finalConfig;
+    services.playerctld.enable = true;
 
-      xdg.portal = {
-        enable = true;
-        xdgOpenUsePortal = true;
+    services.cliphist.enable = true;
 
-        extraPortals = [
-          pkgs.xdg-desktop-portal-gnome
-          pkgs.xdg-desktop-portal-gtk
-        ];
+    services.gnome-keyring.enable = true;
 
-        config.niri = {
-          default = ["gnome" "gtk"];
-          "org.freedesktop.impl.portal.Access" = "gtk";
-          "org.freedesktop.impl.portal.FileChooser" = "gtk";
-          "org.freedesktop.impl.portal.Notification" = "gtk";
-          "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
-        };
-      };
-
-      i18n.inputMethod = {
-        enable = true;
-        type = "fcitx5";
-      };
-
-      xdg.terminal-exec = {
-        enable = true;
-        settings.niri = ["foot.desktop"];
-      };
-      programs.foot.enable = true;
-
-      programs.fuzzel.enable = true;
-
-      services.mako = {
-        enable = true;
-        settings.on-button-left = ''exec makoctl menu -n "$id" -- fuzzel --dmenu --prompt "Select action: " --minimal-lines'';
-      };
-
-      services.playerctld.enable = true;
-
-      services.cliphist.enable = true;
-
-      services.gnome-keyring.enable = true;
-
-      programs.niri.settings = {
+    programs.niri = {
+      package = pkgs.niri;
+      settings = {
         cursor = {
           hide-after-inactive-ms = 3000;
         };
@@ -159,6 +115,7 @@
         };
 
         overview = {
+          backdrop-color = config.lib.stylix.colors.withHashtag.base00;
           workspace-shadow.enable = false;
         };
 
@@ -194,15 +151,9 @@
             block-out-from = "screencast";
           }
           {
-            matches = [{app-id = "^Waydroid$";}];
-            open-fullscreen = true;
-          }
-          {
             matches = [
               {app-id = "^footclient$";}
               {app-id = "^foot$";}
-              {app-id = "^Alacritty$";}
-              {app-id = "^rio$";}
             ];
             default-column-width.proportion = 1. / 3;
           }
@@ -215,6 +166,10 @@
               {namespace = "^fuzzel-polkit-agent$";}
             ];
             block-out-from = "screencast";
+          }
+          {
+            matches = [{namespace = "^wallpaper$";}];
+            place-within-backdrop = true;
           }
         ];
 
@@ -377,31 +332,6 @@
           allow-when-locked = true;
           action.spawn = ["brightnessctl" "set" "5%+"];
         };
-      };
-    };
-  };
-
-  flake.modules.homeManager.theme = {
-    config,
-    lib,
-    ...
-  }: let
-    cfg = config.programs.niri;
-    inherit (config.theme) cursor colors;
-  in {
-    config = lib.mkIf cfg.enable {
-      programs.niri.settings = {
-        cursor = {
-          size = cursor.size;
-          theme = cursor.name;
-        };
-
-        layout.border = {
-          active.color = colors.primary.hex;
-          inactive.color = colors.surface_variant.hex;
-        };
-
-        overview.backdrop-color = colors.background.hex;
       };
     };
   };

@@ -1,18 +1,22 @@
-{
-  flake.modules.homeManager.base = {
+{den, ...}: {
+  den.aspects.desktop.niri.includes = [
+    den.aspects.desktop.i3bar-river
+  ];
+  den.aspects.desktop.niri.homeManager = {
     config,
-    lib,
+    pkgs,
     ...
   }: {
-    config = lib.mkIf config.programs.niri.enable {
-      programs.niri.settings.spawn-at-startup = [
-        {
-          argv = ["i3bar-river"];
-        }
-      ];
+    programs.niri.settings.spawn-at-startup = [
+      {
+        argv = ["i3bar-river"];
+      }
+    ];
 
-      programs.i3bar-river.enable = true;
-      programs.i3status-rust.bars.niri.blocks = [
+    programs.i3status-rust.bars.niri = {
+      icons = "material-nf";
+      theme = "${(pkgs.formats.toml {}).generate "i3status-theme.toml" config.lib.stylix.i3status-rust.bar}";
+      blocks = [
         {
           block = "music";
           format.full = " $icon {$combo $prev $play $next |-- $play }|";
@@ -92,39 +96,6 @@
           ];
         }
       ];
-    };
-  };
-
-  flake.modules.homeManager.theme = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: let
-    inherit (config.theme) colors;
-  in {
-    config = lib.mkIf config.programs.niri.enable {
-      programs.i3status-rust.bars.niri = {
-        icons = "material-nf";
-        theme = "${(pkgs.formats.toml {}).generate "i3status-theme.toml" {
-          idle_bg = colors.surface.hex;
-          idle_fg = colors.on_surface.hex;
-          alternating_tint_bg = let
-            toInt = v: v.r * 65536 + v.g * 256 + v.b;
-          in "#${
-            lib.fixedWidthString 6 "0" (lib.toHexString ((toInt colors.surface_bright.rgb) - (toInt colors.surface.rgb)))
-          }00";
-          info_bg = colors.surface.hex;
-          info_fg = colors.blue.hex;
-          good_bg = colors.surface.hex;
-          good_fg = colors.green.hex;
-          warning_bg = colors.surface.hex;
-          warning_fg = colors.orange.hex;
-          critical_bg = colors.surface.hex;
-          critical_fg = colors.error.hex;
-          separator = "";
-        }}";
-      };
     };
   };
 }

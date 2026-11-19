@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.base = {
+  den.default.nixos = {
     config,
     lib,
     ...

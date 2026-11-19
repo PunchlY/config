@@ -1,5 +1,5 @@
 {
-  configurations.nixos.tap.host = {
+  den.aspects.tap.nixos = {
     config,
     lib,
     modulesPath,

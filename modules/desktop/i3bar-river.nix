@@ -1,41 +1,11 @@
 {
-  flake.modules.homeManager.base = {
-    config,
-    lib,
-    ...
-  }: {
-    config = lib.mkIf config.programs.i3bar-river.enable {
-      programs.i3status-rust.enable = true;
-      programs.i3bar-river.settings = {
+  den.aspects.desktop.i3bar-river.homeManager = {config, ...}: {
+    programs.i3status-rust.enable = true;
+    programs.i3bar-river = {
+      enable = true;
+      settings = {
+        height = config.stylix.fonts.sizes.desktop * 2;
         command = ''i3status-rs "config-''${XDG_CURRENT_DESKTOP:-default}"'';
-      };
-    };
-  };
-
-  flake.modules.homeManager.theme = {
-    config,
-    lib,
-    ...
-  }: let
-    inherit (config.theme) colors font;
-  in {
-    config = lib.mkIf config.programs.i3bar-river.enable {
-      programs.i3bar-river.settings = {
-        height = font.size * 2;
-        font = "monospace ${toString font.size}";
-
-        tags_padding = font.size;
-        tags_margin = 0;
-        separator_width = 0;
-        background = colors.surface.hex;
-        tag_fg = colors.on_surface.hex;
-        tag_bg = colors.surface.hex;
-        tag_focused_fg = colors.on_primary.hex;
-        tag_focused_bg = colors.primary.hex;
-        tag_urgent_fg = colors.on_error.hex;
-        tag_urgent_bg = colors.error.hex;
-        tag_inactive_bg = colors.surface.hex;
-        tag_inactive_fg = colors.on_surface.hex;
       };
     };
   };

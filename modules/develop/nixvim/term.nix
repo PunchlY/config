@@ -1,0 +1,17 @@
+{
+  den.aspects.develop.nixvim = _: {
+    plugins.toggleterm.enable = true;
+    keymaps = [
+      {
+        action = "<cmd>ToggleTerm<cr>";
+        key = "<C-`>";
+        mode = ["n" "i" "v" "s" "t"];
+      }
+      {
+        action = "<C-\\><C-n>";
+        key = "<esc>";
+        mode = "t";
+      }
+    ];
+  };
+}

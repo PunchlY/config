@@ -1,5 +1,5 @@
 {
-  configurations.nixos.nano.host = {
+  den.aspects.nano.nixos = {
     config,
     lib,
     modulesPath,

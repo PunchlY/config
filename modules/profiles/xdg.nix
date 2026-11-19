@@ -1,8 +1,5 @@
 {
-  flake.modules.nixos.base = {
-  };
-
-  flake.modules.homeManager.base = {
+  den.default.homeManager = {
     config,
     pkgs,
     lib,

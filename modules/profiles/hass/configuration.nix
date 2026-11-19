@@ -1,5 +1,7 @@
 {inputs, ...}: {
-  configurations.nixos.hass.host = {
+  den.hosts.x86_64-linux.hass.users.punchly = {};
+
+  den.aspects.hass.nixos = {
     config,
     pkgs,
     lib,
@@ -9,12 +11,6 @@
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
-
-    networking.networkmanager.enable = true;
-
-    services.openssh.enable = true;
-
-    services.swapspace.enable = true;
 
     hardware.bluetooth.enable = true;
 
