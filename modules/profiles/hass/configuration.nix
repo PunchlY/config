@@ -1,5 +1,14 @@
-{inputs, ...}: {
+{
+  inputs,
+  den,
+  ...
+}: {
   den.hosts.x86_64-linux.hass.users.punchly = {};
+
+  den.aspects.hass.includes = [
+    (den.batteries.tty-autologin "punchly")
+    den.aspects.services.danmakus
+  ];
 
   den.aspects.hass.nixos = {
     config,
@@ -122,7 +131,5 @@
       HandleLidSwitchExternalPower = "ignore";
       HandleLidSwitchDocked = "ignore";
     };
-
-    services.getty.autologinUser = config.user.name;
   };
 }

@@ -9,7 +9,6 @@
       "plymouth.use-simpledrm"
     ];
     boot.consoleLogLevel = 3;
-    boot.initrd.verbose = false;
     boot.loader.timeout = 0;
   };
 }

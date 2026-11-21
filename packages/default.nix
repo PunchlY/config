@@ -3,9 +3,10 @@
     config,
     final,
     pkgs,
-    lib,
     ...
   }: {
+    legacyPackages.pkgs = final;
+
     packages = config.overlayAttrs;
 
     overlayAttrs = {
@@ -65,15 +66,5 @@
 
       wleird = final.callPackage ./wleird.nix {};
     };
-
-    apps =
-      lib.mapAttrs (name: script: {
-        type = "app";
-        program = lib.getExe script;
-        meta.description = name;
-      })
-      final.custom-scripts.scripts;
-
-    legacyPackages.pkgs = final;
   };
 }
