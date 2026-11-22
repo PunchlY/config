@@ -7,11 +7,11 @@ CUSTOM_MODE="$(@xrandr@/bin/xrandr | @jc@/bin/jc --xrandr -p | @jq@/bin/jq -r '.
 @wlr-randr@/bin/wlr-randr --output "$OUTPUT" --custom-mode "$CUSTOM_MODE"
 
 {
-  sleep 1
-  sudo -nv && while [[ -z "$(sudo -n waydroid shell getprop sys.boot_completed)" ]]; do
-    sleep 1
-  done
-  echo add | sudo -n tee /sys/devices/virtual/input/input*/event*/uevent
+	sleep 1
+	sudo -nv && while [[ -z "$(sudo -n waydroid shell getprop sys.boot_completed)" ]]; do
+		sleep 1
+	done
+	echo add | sudo -n tee /sys/devices/virtual/input/input*/event*/uevent
 } &
 FIX_PID=$!
 trap 'kill "$FIX_PID" 2>/dev/null' EXIT

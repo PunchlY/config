@@ -13,6 +13,12 @@
       nixos = _: {
         imports = [inputs.stylix.nixosModules.stylix];
 
+        home-manager.sharedModules = [
+          {
+            disabledModules = ["${inputs.stylix}/modules/wayprompt/hm.nix"];
+          }
+        ];
+
         stylix.enable = true;
         fonts = {
           enableDefaultPackages = false;
