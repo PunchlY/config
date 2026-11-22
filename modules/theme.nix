@@ -75,6 +75,13 @@
     fonts.serif = config.stylix.fonts.monospace;
     fonts.sansSerif = config.stylix.fonts.monospace;
 
+    icons = {
+      enable = true;
+      package = pkgs.papirus-icon-theme;
+      dark = "Papirus-Dark";
+      light = "Papirus-Light";
+    };
+
     fonts.sizes = {
       applications = 14;
       desktop = 14;
