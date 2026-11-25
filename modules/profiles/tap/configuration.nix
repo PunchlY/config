@@ -10,9 +10,8 @@
     den.aspects.gaming.katawa-shoujo-re-engineered
     den.aspects.gaming.minecraft-je
     den.aspects.gaming.shattered-pixel-dungeon
+    den.aspects.gaming.wiliwili
     den.aspects.gaming.zzz
-
-    den.aspects.desktop.wiliwili
 
     den.aspects.services.udiskie
     den.aspects.services.pipewire

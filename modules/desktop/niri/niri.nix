@@ -61,6 +61,8 @@
         (pkgs)
         libnotify
         brightnessctl
+        wireplumber
+        playerctl
         wl-clipboard
         ;
     };

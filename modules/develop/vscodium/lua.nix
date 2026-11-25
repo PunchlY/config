@@ -1,5 +1,5 @@
 {
-  den.aspects.develop.homeManager = {
+  den.aspects.develop.vscodium.homeManager = {
     pkgs,
     lib,
     ...

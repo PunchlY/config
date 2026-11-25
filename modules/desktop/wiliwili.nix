@@ -1,4 +1,8 @@
-{
+{den, ...}: {
+  den.aspects.gaming.wiliwili.includes = [
+    den.aspects.desktop.wiliwili
+  ];
+
   den.aspects.desktop.wiliwili.homeManager = {
     config,
     pkgs,

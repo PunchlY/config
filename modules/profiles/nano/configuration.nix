@@ -10,6 +10,7 @@
 
     den.aspects.develop
     den.aspects.develop.distrobox
+    den.aspects.develop.vscodium
 
     den.aspects.gaming
     den.aspects.gaming.celeste64
@@ -72,11 +73,7 @@
       outputs."eDP-1".scale = 1.5;
     };
 
-    programs.aria2.enable = true;
-
     programs.cava.enable = true;
-
-    programs.opencode.enable = true;
 
     programs.impala.enable = true;
 
@@ -95,23 +92,6 @@
     home.packages = builtins.attrValues {
       inherit
         (pkgs)
-        custom-scripts
-        just
-        nix-output-monitor
-        nh
-        nurl
-        moreutils
-        wget
-        q
-        yq-go
-        tree
-        wireplumber
-        exiftool
-        android-tools
-        xdg-user-dirs
-        screen
-        lazygit
-        gdu
         terminal-toys
         terminal-colors
         terminal-typeracer
@@ -126,10 +106,6 @@
         scrcpy
         telegram-desktop
         aseprite
-        ;
-      inherit
-        (pkgs.nur.repos.moraxyc)
-        man-pages-zh
         ;
 
       crosspipe = pkgs.gtk-nocsd.wrapper pkgs.crosspipe;
