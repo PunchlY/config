@@ -1,6 +1,11 @@
 {den, ...}: {
+  den.aspects.owner.user = {
+    uid = 1000;
+  };
+
   den.aspects.punchly.includes = [
     den.batteries.primary-user
+    den.aspects.owner
   ];
 
   den.aspects.punchly.user = _: {
@@ -24,9 +29,5 @@
         email = "punchly9lin@gmail.com";
       };
     };
-  };
-
-  den.aspects.punchly.jovian = {user, ...}: {
-    steam.user = user.userName;
   };
 }

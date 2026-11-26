@@ -38,20 +38,16 @@
 
   den.aspects.gaming.includes = [
     den.aspects.plymouth
-    ({
-      host,
-      user,
-      aspect-chain,
-    }:
-      den.batteries.forward {
-        each = ["${user.userName}@${host.hostName}"];
-        fromClass = _: "jovian";
-        intoClass = _: "nixos";
-        intoPath = _: ["jovian"];
-        adaptArgs = lib.id;
-        fromAspect = _: lib.last aspect-chain;
-      })
   ];
+
+  den.aspects.owner.provides.to-hosts.nixos = {
+    user,
+    options,
+    ...
+  }:
+    lib.mkIf (options ? jovian) {
+      jovian.steam.user = user.userName;
+    };
 
   den.aspects.gaming.nixpkgs = _: {
     overlays = [

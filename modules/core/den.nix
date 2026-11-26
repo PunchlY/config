@@ -42,6 +42,7 @@
   den.default.includes = [
     den.batteries.hostname
     den.batteries.define-user
+    den.batteries.mutual-provider
     den.batteries.host-aspects
     # den.batteries.user-aspects
     den.batteries.inputs'
