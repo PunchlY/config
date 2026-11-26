@@ -13,7 +13,6 @@
     den.aspects.gaming.wiliwili
     den.aspects.gaming.zzz
 
-    den.aspects.services.udiskie
     den.aspects.services.pipewire
   ];
 

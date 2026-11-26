@@ -19,9 +19,9 @@
     den.aspects.gaming.shattered-pixel-dungeon
 
     den.aspects.services.aria2
+    den.aspects.services.droidloom
     den.aspects.services.honk
     den.aspects.services.kmscon
-    den.aspects.services.udiskie
     den.aspects.services.pipewire
   ];
 

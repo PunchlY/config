@@ -153,6 +153,26 @@
         "type": "github"
       }
     },
+    "droidloom": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1795248302,
+        "narHash": "sha256-NMIwvd7TIuzszAlGXeMBOQBiYc4B3vS59eOKXtn+Rmg=",
+        "owner": "pharra",
+        "repo": "droidloom-flake",
+        "rev": "f309dd9d600d6fdb4327c1c6a5c6ad1e8e503f42",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pharra",
+        "repo": "droidloom-flake",
+        "type": "github"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -659,6 +679,7 @@
         "ccicnce113424-nix-packages": "ccicnce113424-nix-packages",
         "chaotic": "chaotic",
         "den": "den",
+        "droidloom": "droidloom",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",

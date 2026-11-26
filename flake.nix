@@ -46,6 +46,10 @@
     den = {
       url = "github:denful/den";
     };
+    droidloom = {
+      url = "github:pharra/droidloom-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-file = {
       url = "github:denful/flake-file";
     };
