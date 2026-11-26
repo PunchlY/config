@@ -9,29 +9,6 @@
   };
 
   den.schema.host.includes = [
-    {
-      nixos = _: {
-        imports = [inputs.stylix.nixosModules.stylix];
-
-        home-manager.sharedModules = [
-          {
-            disabledModules = ["${inputs.stylix}/modules/wayprompt/hm.nix"];
-          }
-        ];
-
-        stylix.enable = true;
-        fonts = {
-          enableDefaultPackages = false;
-          fontDir.enable = true;
-        };
-      };
-
-      homeManager = {config, ...}: {
-        home.pointerCursor.enable = true;
-
-        xdg.dataFile."fonts".source = config.lib.file.mkOutOfStoreSymlink "/run/current-system/sw/share/X11/fonts";
-      };
-    }
     ({host}:
       den.batteries.forward {
         each = [host];
@@ -41,6 +18,29 @@
         adaptArgs = lib.id;
       })
   ];
+
+  den.default.nixos = _: {
+    imports = [inputs.stylix.nixosModules.stylix];
+
+    stylix.enable = true;
+
+    fonts = {
+      enableDefaultPackages = false;
+      fontDir.enable = true;
+    };
+
+    home-manager.sharedModules = [
+      ({config, ...}: {
+        xdg.dataFile."fonts".source = config.lib.file.mkOutOfStoreSymlink "/run/current-system/sw/share/X11/fonts";
+      })
+    ];
+  };
+
+  den.default.homeManager = _: {
+    disabledModules = ["${inputs.stylix}/modules/wayprompt/hm.nix"];
+
+    home.pointerCursor.enable = true;
+  };
 
   den.default.stylix = {
     config,

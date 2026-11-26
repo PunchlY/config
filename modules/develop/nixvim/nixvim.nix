@@ -11,11 +11,6 @@
   };
 
   den.schema.host.includes = [
-    {
-      nixos = _: {
-        imports = [inputs.nixvim.nixosModules.default];
-      };
-    }
     ({host}:
       den.batteries.forward {
         each = [host];
@@ -24,6 +19,10 @@
         intoPath = _: ["programs" "nixvim"];
       })
   ];
+
+  den.default.nixos = _: {
+    imports = [inputs.nixvim.nixosModules.default];
+  };
 
   den.aspects.develop.nixos = _: {
     programs.nixvim = {

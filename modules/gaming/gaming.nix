@@ -21,11 +21,6 @@
   };
 
   den.schema.user.includes = [
-    {
-      homeManager = _: {
-        imports = [inputs.steam-config-nix.homeModules.default];
-      };
-    }
     ({user}:
       den.batteries.forward {
         each = [user];
@@ -41,6 +36,10 @@
       "${inputs.aagl}/module"
       inputs.chaotic.vendored.jovian.nixosModules.default
     ];
+  };
+
+  den.default.homeManager = _: {
+    imports = [inputs.steam-config-nix.homeModules.default];
   };
 
   den.aspects.gaming.includes = [
