@@ -6,7 +6,7 @@
 }: {
   imports = [
     inputs.flake-parts.flakeModules.easyOverlay
-    ../../packages
+    ../packages
   ];
 
   flake-file.inputs = {

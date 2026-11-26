@@ -4,7 +4,12 @@
       enable = true;
       dockerCompat = true;
     };
+
+    xdg.portal.enable = true;
+
+    services.flatpak.enable = true;
   };
+
   den.aspects.develop.distrobox.homeManager = {
     programs.distrobox = {
       enable = true;
