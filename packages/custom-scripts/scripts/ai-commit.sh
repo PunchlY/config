@@ -4,23 +4,23 @@ set -euo pipefail
 print_prompt=0
 
 while (($#)); do
-	case "$1" in
-	--print-prompt)
-		print_prompt=1
-		shift
-		;;
-	-*)
-		shift
-		;;
-	*)
-		break
-		;;
-	esac
+  case "$1" in
+  --print-prompt)
+    print_prompt=1
+    shift
+    ;;
+  -*)
+    shift
+    ;;
+  *)
+    break
+    ;;
+  esac
 done
 
 if @git@/bin/git diff --cached --quiet; then
-	echo "No staged changes to commit."
-	exit 0
+  echo "No staged changes to commit."
+  exit 0
 fi
 
 IFS= read -r -d '' prompt <<EOF || :
@@ -59,22 +59,22 @@ Example Invalid Output (DO NOT DO THIS):
 EOF
 
 if [ "$print_prompt" = "1" ]; then
-	echo "$prompt"
-	exit 0
+  echo "$prompt"
+  exit 0
 fi
 
 COMMIT_MSG="$(@opencode@/bin/opencode run --agent plan "$prompt")"
 
 if [ -z "${COMMIT_MSG}" ]; then
-	echo "Generated commit message is empty."
-	exit 1
+  echo "Generated commit message is empty."
+  exit 1
 fi
 
 EDITED_MSG="$(@gum@/bin/gum write --width "${COLUMNS:-0}" <<<"$COMMIT_MSG")"
 
 if [ -z "$EDITED_MSG" ]; then
-	echo "Commit message is empty."
-	exit 1
+  echo "Commit message is empty."
+  exit 1
 fi
 
 @git@/bin/git commit -F - <<<"$EDITED_MSG"

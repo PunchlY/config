@@ -1,64 +1,40 @@
 {
   symlinkJoin,
   replaceVarsWith,
-  makeDesktopItem,
-  copyDesktopItems,
   newScope,
   lib,
 }: let
   callPackage = newScope (lib.mapAttrs (name: script: "${script}/bin/${name}") scripts);
 
-  mkScripts = lib.flip lib.genAttrs' (script: let
-    attrs =
-      if lib.isPath script
-      then {src = script;}
-      else script;
-    vars = lib.pipe attrs.src [
+  mkScript = name: src: let
+    vars = lib.pipe src [
       lib.readFile
       (lib.split "@([a-zA-Z_][0-9A-Za-z_'-]*)@")
       (lib.filter lib.isList)
       (lib.map lib.head)
       lib.unique
     ];
-    basename = lib.baseNameOf attrs.src;
-    ext = lib.last (lib.splitString "." basename);
-    name = lib.removeSuffix ".${ext}" basename;
-  in {
-    inherit name;
-    value = callPackage (lib.setFunctionArgs (
+  in
+    callPackage (lib.setFunctionArgs (
       replacements:
-        replaceVarsWith (attrs
-          // {
-            inherit name replacements;
-            dir = "bin";
-            isExecutable = true;
-            meta.mainProgram = name;
-          })
+        replaceVarsWith {
+          inherit src name replacements;
+          dir = "bin";
+          isExecutable = true;
+          meta.mainProgram = name;
+        }
     ) (lib.genAttrs vars (_: false))) {};
-  });
 
-  scripts = mkScripts [
-    ./scripts/2nix.sh
-    ./scripts/ai-commit.sh
-    ./scripts/ips.sh
-    ./scripts/nstore.sh
-    ./scripts/fileurl.sh
-    ./scripts/pkgs.sh
-    ./scripts/qrscan.sh
-    {
-      src = ./scripts/scrcpy-finder.sh;
-      desktopItems = [
-        (makeDesktopItem {
-          name = "scrcpy-finder";
-          exec = "scrcpy-finder";
-          desktopName = "Scrcpy Finder";
-        })
-      ];
-      nativeBuildInputs = [
-        copyDesktopItems
-      ];
-    }
-  ];
+  scripts =
+    builtins.readDir ./scripts
+    |> lib.mapAttrs' (name: _: let
+      basename = lib.baseNameOf name;
+      ext = lib.last (lib.splitString "." basename);
+    in {
+      name = lib.removeSuffix ".${ext}" basename;
+      value = ./scripts/${name};
+    })
+    |> lib.mapAttrs mkScript;
 in
   symlinkJoin {
     name = "cutstom-scripts";
