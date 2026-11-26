@@ -3,19 +3,15 @@
     droidloom.url = "github:pharra/droidloom-flake";
   };
 
-  den.aspects.owner.provides.to-hosts.nixos = {
-    user,
-    options,
-    lib,
-    ...
-  }:
-    lib.mkIf (options.services ? droidloom) {
-      services.droidloom.user = user.userName;
-    };
-
-  den.aspects.services.droidloom.nixos = {...}: {
+  den.default.nixos = _: {
     imports = [inputs.droidloom.nixosModules.default];
+  };
 
+  den.aspects.owner.provides.to-hosts.nixos = {user, ...}: {
+    services.droidloom.user = user.userName;
+  };
+
+  den.aspects.services.droidloom.nixos = _: {
     services.droidloom = {
       enable = true;
       manageSubIds = true;

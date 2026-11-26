@@ -39,9 +39,6 @@
   ];
   den.schema.flake-parts.includes = [
     den.policies.packages-to-flake-parts
-    {
-      packages = _: {};
-    }
   ];
 
   den.default.nixpkgs = _: {
@@ -56,6 +53,5 @@
       inherit system;
       config.allowUnfree = true;
     };
-    # _module.args.final = pkgs.appendOverlays config.nixpkgs.overlays;
   };
 }

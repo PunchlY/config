@@ -36,18 +36,20 @@
       })
   ];
 
+  den.default.nixos = _: {
+    imports = [
+      "${inputs.aagl}/module"
+      inputs.chaotic.vendored.jovian.nixosModules.default
+    ];
+  };
+
   den.aspects.gaming.includes = [
     den.aspects.plymouth
   ];
 
-  den.aspects.owner.provides.to-hosts.nixos = {
-    user,
-    options,
-    ...
-  }:
-    lib.mkIf (options ? jovian) {
-      jovian.steam.user = user.userName;
-    };
+  den.aspects.owner.provides.to-hosts.nixos = {user, ...}: {
+    jovian.steam.user = user.userName;
+  };
 
   den.aspects.gaming.nixpkgs = _: {
     overlays = [
@@ -56,11 +58,6 @@
   };
 
   den.aspects.gaming.nixos = {lib, ...}: {
-    imports = [
-      "${inputs.aagl}/module"
-      inputs.chaotic.vendored.jovian.nixosModules.default
-    ];
-
     networking.mihoyo-telemetry.block = true;
 
     jovian.steam = {
